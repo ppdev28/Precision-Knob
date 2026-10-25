@@ -41,5 +41,5 @@ Abrir la carpeta raíz, esperar el sync y ejecutar el módulo `app`.
 ## Prueba de tono (solo debug)
 Con el teléfono conectado por ADB, reproduce un tono y recorre ajustes de `LoudnessEnhancer` y `Equalizer` globales para comprobar de oído que el dispositivo los aplica:
 ```bash
-adb shell am start -n com.sonicdial.app/.debug.ToneTestActivity
+adb shell am start -n com.flatdial.app/.debug.ToneTestActivity
 ```

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.sonicdial.app"
+    namespace = "com.flatdial.app"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.sonicdial.app"
+        applicationId = "com.flatdial.app"
         minSdk = 28
         targetSdk = 35
         versionCode = 1

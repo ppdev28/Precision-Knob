@@ -1,4 +1,4 @@
-# SonicDial – Documentación
+# FlatDial – Documentación
 
 | Documento | Contenido |
 |---|---|

@@ -1,5 +1,7 @@
 # Roadmap
 
+La app se llama **FlatDial** (antes SonicDial); paquete `com.flatdial.app`.
+
 Estado: ✅ hecho · 🚧 en curso · ⬜ pendiente
 
 Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfiles de EQ de AutoEq para auriculares planos.
@@ -17,12 +19,13 @@ Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfile
 - ⬜ Pantalla de estado/diagnóstico (qué efecto se creó y con qué error)
 - ⬜ Calibrar la curva: comprobar que los dB reportados coinciden con lo que se oye; considerar curva perceptual
 - ⬜ Alternativa si el efecto global no funciona en el dispositivo (p. ej. reproductor propio o sesiones por app)
-- ⬜ Ring/Alarm: valorar si merece la pena algo más que pasos nativos
+- ✅ App orientada solo a Media (se quitó el selector Media/Ring/Alarm)
+- ✅ Interruptor para desactivar el procesamiento y el servicio en segundo plano
 
 ## Fase 2 – Perfiles de auriculares 🚧
 - ✅ Parser `ParametricEQ.txt` (PK, LS/LSC, HS/HSC) y respuesta por biquads
 - ✅ Búsqueda en el índice de AutoEq, descarga e importación de archivo, perfiles guardados
-- ✅ Curva de respuesta y ajuste manual de 5 bandas
+- ✅ Curva de respuesta (se quitó el ecualizador gráfico manual; la pantalla pasó a llamarse "EQ Correction")
 - ✅ Ajuste del perfil a las 5 bandas del `Equalizer` global (aproximación)
 - ⬜ EQ más fiel: `DynamicsProcessing` por sesión de audio (detectar sesiones, `DUMP` por ADB) como hace Precise Volume
 - ⬜ Validar en el teléfono que el EQ suena como el perfil (comparar con/sin; revisar que no haya clipping con el preamp)
@@ -33,7 +36,6 @@ Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfile
 
 ## Fase 3 – Calidad
 - ⬜ Tests de UI del dial y de la pantalla EQ; previews de Compose
-- ⬜ Aviso/acceso a No molestar para Ring
 - ⬜ Fuente DM Sans y pulido visual frente a `screenshoot_UI.png`
 - ⬜ Manejo de errores de red y modo sin conexión más claro
 
