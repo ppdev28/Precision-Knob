@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SonicDial</string>
+
+    <string name="stream_media">Media</string>
+    <string name="stream_ring">Ring</string>
+    <string name="stream_alarm">Alarm</string>
+
+    <string name="status_media_stream">MEDIA STREAM</string>
+    <string name="status_ring_stream">RING STREAM</string>
+    <string name="status_alarm_stream">ALARM STREAM</string>
+
+    <string name="dial_label_media">MEDIA VOLUME</string>
+    <string name="dial_label_ring">RING VOLUME</string>
+    <string name="dial_label_alarm">ALARM VOLUME</string>
+    <string name="dial_system_step">System step %1$d of %2$d</string>
+    <string name="dial_unavailable">Unavailable</string>
+
+    <string name="action_mute">Mute</string>
+    <string name="action_unmute">Unmute</string>
+    <string name="action_down">Down</string>
+    <string name="action_up">Up</string>
+    <string name="changes_apply_to">Changes apply to %1$s audio</string>
+
+    <string name="nav_volume">Volume</string>
+    <string name="nav_equalizer">Equalizer</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_back">Back</string>
+
+    <string name="eq_title">Equalizer</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_audio">Audio behavior</string>
+    <string name="settings_default_stream">Default audio stream</string>
+    <string name="settings_show_percent">Show volume percentage</string>
+    <string name="settings_haptics">Haptic feedback</string>
+    <string name="settings_haptics_summary">Vibrate lightly while turning the dial</string>
+    <string name="settings_restore_last">Restore last selected stream</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_dark">Dark</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_system">Follow system</string>
+    <string name="settings_section_about">App information</string>
+    <string name="settings_version">Version</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_privacy_summary">SonicDial collects no data. The network is used only to download headphone profiles from the public AutoEq repository.</string>
+    <string name="settings_permissions">Permissions and audio limitations</string>
+    <string name="settings_permissions_summary">Ring volume may require Do Not Disturb access. Fine volume and the equalizer use a global audio effect that not every device supports.</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dial_system_step_trim">System step %1$d of %2$d · %3$.1f dB</string>
+    <string name="fine_unavailable">Native steps only: this device does not allow the audio effect used for 1% control</string>
+
+    <string name="fx_channel_name">Audio processing</string>
+    <string name="fx_notification_title">SonicDial audio processing active</string>
+    <string name="fx_notification_text">Equalizer and fine volume are applied</string>
+
+    <string name="eq_on">ON</string>
+    <string name="eq_off">OFF</string>
+    <string name="eq_fx_unavailable">This device does not allow global audio effects, so the equalizer cannot be applied. Profiles can still be saved.</string>
+    <string name="eq_headphones">Headphones</string>
+    <string name="eq_no_profile">No profile selected</string>
+    <string name="eq_profile_summary">%1$s · preamp %2$.1f dB · %3$d filters</string>
+    <string name="eq_find_profile">Find headphones</string>
+    <string name="eq_import_file">Import file</string>
+    <string name="eq_import_failed">Not a valid ParametricEQ.txt file</string>
+    <string name="eq_my_profiles">My profiles</string>
+    <string name="eq_delete_profile">Delete profile</string>
+    <string name="eq_manual">Manual adjustment</string>
+    <string name="eq_manual_summary">Extra tweaks on top of the profile</string>
+    <string name="eq_reset_manual">Reset manual bands</string>
+    <string name="eq_note">Profiles come from the AutoEq project and are measurement-based estimates. Results vary by unit. The device equalizer has only a few bands, so the profile is approximated. Effects apply to the whole device output.</string>
+
+    <string name="search_title">Find headphones</string>
+    <string name="search_hint">Search model (e.g. HD 600)</string>
+    <string name="search_loading">Loading AutoEq index…</string>
+    <string name="search_error">Could not load the list: %1$s</string>
+    <string name="search_retry">Retry</string>
+    <string name="search_refine">Showing the first %1$d results. Refine your search.</string>
+    <string name="search_no_results">No results</string>
+    <string name="search_downloading">Downloading…</string>
+</resources>

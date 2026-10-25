@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Debug-only listening test for global audio effects. Start with:
+             adb shell am start -n com.sonicdial.app/.debug.ToneTestActivity -->
+        <activity
+            android:name=".debug.ToneTestActivity"
+            android:exported="true" />
+    </application>
+</manifest>
