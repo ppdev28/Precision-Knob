@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -31,6 +32,7 @@ import com.flatdial.app.ui.equalizer.ProfileSearchScreen
 import com.flatdial.app.ui.settings.SettingsScreen
 import com.flatdial.app.ui.settings.SettingsViewModel
 import com.flatdial.app.ui.theme.FlatDialTheme
+import com.flatdial.app.ui.theme.Spacing
 import com.flatdial.app.ui.volume.VolumeScreen
 
 private enum class Destination(val route: String, val label: Int, val icon: ImageVector?) {
@@ -57,7 +59,7 @@ fun FlatDialApp() {
             containerColor = MaterialTheme.colorScheme.background,
             bottomBar = {
                 if (showBottomBar) {
-                    NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
+                    NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
                         bottomDestinations.forEach { dest ->
                             NavigationBarItem(
                                 selected = currentDestination?.hierarchy?.any { it.route == dest.route } == true,
@@ -79,7 +81,8 @@ fun FlatDialApp() {
             NavHost(
                 navController = navController,
                 startDestination = Destination.Volume.route,
-                modifier = Modifier.fillMaxSize().padding(padding),
+                // Small gap between the content and the bottom bar.
+                modifier = Modifier.fillMaxSize().padding(padding).padding(bottom = if (showBottomBar) Spacing.s + Spacing.xs else 0.dp),
             ) {
                 composable(Destination.Volume.route) {
                     VolumeScreen(settings = settings)

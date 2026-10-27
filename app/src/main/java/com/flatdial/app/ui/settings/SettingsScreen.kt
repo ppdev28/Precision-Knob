@@ -36,9 +36,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.flatdial.app.BuildConfig
 import com.flatdial.app.R
+import com.flatdial.app.data.DialSteps
 import com.flatdial.app.data.ThemeMode
 import com.flatdial.app.ui.AppViewModelProvider
 import com.flatdial.app.ui.theme.Spacing
+import com.flatdial.app.ui.theme.flatSwitchColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,6 +49,7 @@ fun SettingsScreen(
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
     var showThemeDialog by remember { mutableStateOf(false) }
+    var showStepDialog by remember { mutableStateOf(false) }
 
     // The parent Scaffold already applies the system-bar insets: don't apply them twice.
     Scaffold(
@@ -69,6 +72,11 @@ fun SettingsScreen(
                 viewModel::setProcessingEnabled,
             )
             SwitchRow(stringResource(R.string.settings_show_percent), null, settings.showPercent, viewModel::setShowPercent)
+            ClickRow(
+                title = stringResource(R.string.settings_dial_step),
+                summary = stringResource(R.string.dial_step_option, settings.dialStep) + " · " + stringResource(R.string.settings_dial_step_summary),
+                onClick = { showStepDialog = true },
+            )
             SwitchRow(stringResource(R.string.settings_haptics), stringResource(R.string.settings_haptics_summary), settings.haptics, viewModel::setHaptics)
 
             HorizontalDivider(Modifier.padding(vertical = Spacing.s))
@@ -87,6 +95,16 @@ fun SettingsScreen(
         }
     }
 
+    if (showStepDialog) {
+        ChoiceDialog(
+            title = stringResource(R.string.settings_dial_step),
+            options = DialSteps,
+            selected = settings.dialStep,
+            labelOf = { stringResource(R.string.dial_step_option, it) },
+            onSelect = { viewModel.setDialStep(it); showStepDialog = false },
+            onDismiss = { showStepDialog = false },
+        )
+    }
     if (showThemeDialog) {
         ChoiceDialog(
             title = stringResource(R.string.settings_theme),
@@ -129,7 +147,7 @@ private fun SwitchRow(title: String, summary: String?, checked: Boolean, onChang
     ListItem(
         headlineContent = { Text(title) },
         supportingContent = summary?.let { { Text(it) } },
-        trailingContent = { Switch(checked = checked, onCheckedChange = null) },
+        trailingContent = { Switch(checked = checked, onCheckedChange = null, colors = flatSwitchColors()) },
         modifier = Modifier.clickable(role = Role.Switch) { onChange(!checked) },
     )
 }

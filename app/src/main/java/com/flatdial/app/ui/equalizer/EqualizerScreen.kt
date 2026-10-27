@@ -44,6 +44,7 @@ import com.flatdial.app.ui.AppViewModelProvider
 import com.flatdial.app.ui.components.EqCurve
 import com.flatdial.app.ui.theme.Radius
 import com.flatdial.app.ui.theme.Spacing
+import com.flatdial.app.ui.theme.flatSwitchColors
 
 @Composable
 fun EqualizerScreen(
@@ -78,7 +79,7 @@ fun EqualizerScreen(
                     color = if (state.enabled) colors.primary else colors.onSurfaceVariant,
                 )
             }
-            Switch(checked = state.enabled, onCheckedChange = viewModel::setEnabled)
+            Switch(checked = state.enabled, onCheckedChange = viewModel::setEnabled, colors = flatSwitchColors())
         }
 
         if (!state.fxAvailable) {

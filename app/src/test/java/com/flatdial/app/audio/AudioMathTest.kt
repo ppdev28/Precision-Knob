@@ -107,3 +107,24 @@ class EqFitTest {
         assertTrue(g.all { it <= 15f })
     }
 }
+
+class DialStepTest {
+    @Test fun snapsToTheNearestDetent() {
+        assertEquals(50, com.flatdial.app.ui.components.snapToStep(0.52f, 5))
+        assertEquals(55, com.flatdial.app.ui.components.snapToStep(0.53f, 5))
+        assertEquals(50, com.flatdial.app.ui.components.snapToStep(0.499f, 10))
+    }
+
+    @Test fun reachesBothEndsAndNeverLeavesTheRange() {
+        for (step in listOf(1, 2, 5, 10)) {
+            assertEquals(0, com.flatdial.app.ui.components.snapToStep(0f, step))
+            assertEquals(100, com.flatdial.app.ui.components.snapToStep(1f, step))
+            assertEquals(100, com.flatdial.app.ui.components.snapToStep(1.3f, step))
+            assertEquals(0, com.flatdial.app.ui.components.snapToStep(-0.2f, step))
+        }
+    }
+
+    @Test fun stepOneKeepsEveryPercent() {
+        assertEquals(37, com.flatdial.app.ui.components.snapToStep(0.37f, 1))
+    }
+}

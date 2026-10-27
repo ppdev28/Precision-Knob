@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Adaptive-icon foreground: the logo scaled x2 and centered inside the 66dp safe zone. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Rounded cyan tile with a waveform glyph, inside the adaptive-icon safe zone. -->
-    <path
-        android:fillColor="#5ECBEA"
-        android:pathData="M30,36 h48 a6,6 0 0 1 6,6 v24 a6,6 0 0 1 -6,6 h-48 a6,6 0 0 1 -6,-6 v-24 a6,6 0 0 1 6,-6 z" />
-    <path
-        android:fillColor="#00000000"
-        android:pathData="M34,54 L42,54 L46,44 L52,66 L57,48 L61,58 L64,54 L74,54"
-        android:strokeColor="#050608"
-        android:strokeLineCap="round"
-        android:strokeLineJoin="round"
-        android:strokeWidth="3" />
+    <group
+        android:scaleX="2"
+        android:scaleY="2"
+        android:translateX="22"
+        android:translateY="26">
+        <!-- headband -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M5.5,17v-2.5a10.5,10.5 0,0 1,21 0V17"
+            android:strokeColor="#071210"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2.8" />
+        <!-- ear cups -->
+        <path
+            android:fillColor="#071210"
+            android:pathData="M5.5,16H8v8H6.8A2.8,2.8 0,0 1,4 21.2v-2.4A2.8,2.8 0,0 1,6.8 16H5.5Z" />
+        <path
+            android:fillColor="#071210"
+            android:pathData="M26.5,16H24v8h1.2a2.8,2.8 0,0 0,2.8 -2.8v-2.4a2.8,2.8 0,0 0,-2.8 -2.8h1.3Z" />
+        <!-- dial ring -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M21.5,17a5.5,5.5 0,1 1,-11 0a5.5,5.5 0,1 1,11 0Z"
+            android:strokeColor="#071210"
+            android:strokeLineCap="round"
+            android:strokeLineJoin="round"
+            android:strokeWidth="2" />
+        <!-- five scale ticks around the top of the dial -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M16,10L16,8.4M19.5,10.94L20.3,9.55M12.5,10.94L11.7,9.55M22.06,13.5L23.45,12.7M9.94,13.5L8.55,12.7"
+            android:strokeColor="#071210"
+            android:strokeLineCap="round"
+            android:strokeWidth="1.6" />
+        <!-- needle -->
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M16,17L18.8,14.2"
+            android:strokeColor="#071210"
+            android:strokeLineCap="round"
+            android:strokeWidth="1.8" />
+        <!-- hub -->
+        <path
+            android:fillColor="#071210"
+            android:pathData="M17.15,17a1.15,1.15 0,1 1,-2.3 0a1.15,1.15 0,1 1,2.3 0Z" />
+    </group>
 </vector>

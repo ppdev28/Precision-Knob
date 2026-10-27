@@ -4,8 +4,6 @@
 
     <string name="stream_media">Media</string>
 
-    <string name="status_media_stream">MEDIA STREAM</string>
-
     <string name="dial_label_media">MEDIA VOLUME</string>
     <string name="dial_system_step">System step %1$d of %2$d</string>
     <string name="dial_unavailable">Unavailable</string>
@@ -70,8 +68,12 @@
     <string name="search_downloading">Downloading…</string>
 
     <string name="processing_switch">Audio processing</string>
-    <string name="processing_off_hint">Processing off: native volume steps, no equalizer, nothing running in the background</string>
+    <string name="processing_off_hint">Processing off</string>
     <string name="settings_processing">Audio processing</string>
     <string name="settings_processing_summary">Fine volume and EQ correction. Turn off to release the audio effects and stop running in the background.</string>
     <string name="eq_processing_off">Audio processing is off. Turn it on (switch in the top bar) to apply the profile.</string>
+
+    <string name="settings_dial_step">Dial step</string>
+    <string name="settings_dial_step_summary">The knob clicks into place every step. Up and Down always move 1%.</string>
+    <string name="dial_step_option">%1$d%%</string>
 </resources>

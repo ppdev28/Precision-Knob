@@ -4,7 +4,9 @@ Objetivo de la app: **control fino del volumen (de 1% en 1%)** y **ecualización
 
 ## Volume (pantalla principal)
 - Barra superior con el **interruptor de procesamiento de audio**. Navegación inferior con tres destinos: Volume, EQ Correction y Settings. La app solo controla el volumen **multimedia** (sin selector de streams).
-- **Dial rotatorio** (`RotaryDial`): arco de 270°, arrastre o toque, ticks, brillo, háptica opcional. Estados 0%, 1–99%, 100%, arrastre y deshabilitado.
+- **Dial rotatorio** (`RotaryDial`): arco de 270°, arrastre o toque, ticks, brillo.
+- **Pasos del dial** (Settings → Dial step: 1, 2, 5 o 10 %, por defecto 5 %): el knob "encaja" en múltiplos del paso, como un potenciómetro de pasos, con una marca por paso. Up/Down siguen moviendo 1 %.
+- **Háptica**: un clic por paso (más fuerte cada 10 % y en los extremos), directo al vibrador con `VibrationEffect` (permiso `VIBRATE`). Se desactiva en Settings → Haptic feedback, y tampoco suena con el procesamiento de audio apagado. Estados 0%, 1–99%, 100%, arrastre y deshabilitado.
 - **Control de 1% en Media**: ver [architecture.md](architecture.md#volumen-fino). El dial, Up y Down se mueven de 1 en 1%. El sublabel muestra el paso del sistema y la atenuación extra, p. ej. `System step 8 of 15 · -1.5 dB`.
 - Interruptor de la barra superior (también en Settings): apagado libera los efectos de audio, detiene el servicio en segundo plano y vuelve a pasos nativos sin EQ.
 - Si el dispositivo no permite el efecto de audio, Media vuelve a pasos nativos y se avisa en pantalla.

@@ -3,6 +3,7 @@ package com.flatdial.app.ui.theme
 import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -12,11 +13,15 @@ import androidx.core.view.WindowCompat
 import com.flatdial.app.data.ThemeMode
 
 private val DarkColors = darkColorScheme(
-    primary = Cyan,
-    onPrimary = OnCyan,
-    primaryContainer = CyanContainerDark,
-    onPrimaryContainer = Cyan,
-    background = Charcoal,
+    primary = PrimaryDark,
+    onPrimary = OnPrimaryDark,
+    primaryContainer = PrimaryContainerDark,
+    onPrimaryContainer = PrimaryDark,
+    secondary = SecondaryDark,
+    onSecondary = OnSecondaryDark,
+    secondaryContainer = SecondaryContainerDark,
+    onSecondaryContainer = SecondaryDark,
+    background = BackgroundDark,
     onBackground = TextPrimaryDark,
     surface = SurfaceDark,
     onSurface = TextPrimaryDark,
@@ -24,13 +29,18 @@ private val DarkColors = darkColorScheme(
     onSurfaceVariant = TextSecondaryDark,
     outline = OutlineDark,
     outlineVariant = OutlineDark,
+    surfaceContainer = BottomBarDark, // bottom navigation bar
 )
 
 private val LightColors = lightColorScheme(
-    primary = CyanLight,
+    primary = PrimaryLight,
     onPrimary = SurfaceLight,
-    primaryContainer = CyanContainerLight,
-    onPrimaryContainer = CyanLight,
+    primaryContainer = PrimaryContainerLight,
+    onPrimaryContainer = PrimaryLight,
+    secondary = SecondaryLight,
+    onSecondary = SurfaceLight,
+    secondaryContainer = SecondaryContainerLight,
+    onSecondaryContainer = SecondaryLight,
     background = BackgroundLight,
     onBackground = TextPrimaryLight,
     surface = SurfaceLight,
@@ -39,6 +49,7 @@ private val LightColors = lightColorScheme(
     onSurfaceVariant = TextSecondaryLight,
     outline = OutlineLight,
     outlineVariant = OutlineLight,
+    surfaceContainer = BottomBarLight,
 )
 
 @Composable
@@ -68,3 +79,14 @@ fun FlatDialTheme(
         content = content,
     )
 }
+
+/** Switches use the secondary accent, same as the logo tile. */
+@Composable
+fun flatSwitchColors() = SwitchDefaults.colors(
+    checkedThumbColor = MaterialTheme.colorScheme.onSecondary,
+    checkedTrackColor = MaterialTheme.colorScheme.secondary,
+    checkedBorderColor = MaterialTheme.colorScheme.secondary,
+    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+    uncheckedBorderColor = MaterialTheme.colorScheme.outline,
+)

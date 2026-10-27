@@ -18,6 +18,7 @@ class SettingsViewModel(private val container: AppContainer) : ViewModel() {
 
     fun setShowPercent(v: Boolean) = viewModelScope.launch { repo.setShowPercent(v) }
     fun setHaptics(v: Boolean) = viewModelScope.launch { repo.setHaptics(v) }
+    fun setDialStep(v: Int) = viewModelScope.launch { repo.setDialStep(v) }
     fun setProcessingEnabled(v: Boolean) = viewModelScope.launch { repo.setProcessingEnabled(v) }
     fun setThemeMode(v: ThemeMode) = viewModelScope.launch { repo.setThemeMode(v) }
 }

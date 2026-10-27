@@ -16,7 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -27,9 +30,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.progressBarRangeInfo
 import androidx.compose.ui.semantics.semantics
@@ -64,10 +65,18 @@ fun RotaryDial(
     showPercent: Boolean = true,
     enabled: Boolean = true,
     hapticsEnabled: Boolean = true,
+    /** Detent size in percent (1, 2, 5, 10): the knob snaps to multiples of it, like a stepped potentiometer. */
+    step: Int = 1,
     onPercentChange: (Int) -> Unit,
 ) {
     val colors = MaterialTheme.colorScheme
-    val haptics = LocalHapticFeedback.current
+    val haptics = rememberDialHaptics()
+
+    // pointerInput(Unit) keeps the first composition's lambdas alive, so everything it reads must be a State.
+    val currentPercent by rememberUpdatedState(percent)
+    val currentStep by rememberUpdatedState(step.coerceAtLeast(1))
+    val currentHaptics by rememberUpdatedState(hapticsEnabled)
+    val onChange by rememberUpdatedState(onPercentChange)
 
     var dragging by remember { mutableStateOf(false) }
     var dragFraction by remember { mutableStateOf(percent / 100f) }
@@ -76,12 +85,16 @@ fun RotaryDial(
     val knobScale by animateFloatAsState(if (dragging) 1.3f else 1f, label = "knobScale")
     val glowAlpha by animateFloatAsState(if (dragging) 0.35f else 0.18f, label = "glowAlpha")
 
+    var lastEmitted by remember { mutableIntStateOf(percent) }
+    LaunchedEffect(percent) { if (!dragging) lastEmitted = percent }
+
     fun emit(fraction: Float) {
-        dragFraction = fraction
-        val newPercent = (fraction * 100).roundToInt()
-        if (newPercent != percent) {
-            if (hapticsEnabled) haptics.performHapticFeedback(HapticFeedbackType.TextHandleMove)
-            onPercentChange(newPercent)
+        val snapped = snapToStep(fraction, currentStep)
+        dragFraction = snapped / 100f
+        if (snapped != lastEmitted) {
+            lastEmitted = snapped
+            if (currentHaptics) haptics.detent(strong = snapped % 10 == 0)
+            onChange(snapped)
         }
     }
 
@@ -94,13 +107,13 @@ fun RotaryDial(
             .semantics {
                 stateDescription = "$percent percent"
                 progressBarRangeInfo = ProgressBarRangeInfo(percent.toFloat(), 0f..100f, steps = 99)
-                if (enabled) setProgress { target -> onPercentChange(target.roundToInt().coerceIn(0, 100)); true }
+                if (enabled) setProgress { target -> onChange(target.roundToInt().coerceIn(0, 100)); true }
             }
             .then(
                 if (!enabled) Modifier else Modifier
                     .pointerInput(Unit) {
                         detectTapGestures { p ->
-                            emit(fractionFromTouch(Offset(size.width / 2f, size.height / 2f), p, percent / 100f))
+                            emit(fractionFromTouch(Offset(size.width / 2f, size.height / 2f), p, currentPercent / 100f))
                         }
                     }
                     .pointerInput(Unit) {
@@ -108,8 +121,7 @@ fun RotaryDial(
                         detectDragGestures(
                             onDragStart = { p ->
                                 dragging = true
-                                dragFraction = fractionFromTouch(center, p, percent / 100f)
-                                emit(dragFraction)
+                                emit(fractionFromTouch(center, p, currentPercent / 100f))
                             },
                             onDragEnd = { dragging = false },
                             onDragCancel = { dragging = false },
@@ -138,11 +150,13 @@ fun RotaryDial(
             val arcSize = Size(arcRadius * 2, arcRadius * 2)
             val activeSweep = SweepAngle * shownFraction
 
-            // ticks
-            for (i in 0..TickCount) {
-                val f = i / TickCount.toFloat()
+            // ticks: one per detent (50 when the step is 1%, to keep the dial readable)
+            val tickCount = if (step <= 1) TickCount else 100 / step
+            val tickPercent = 100f / tickCount
+            for (i in 0..tickCount) {
+                val f = i / tickCount.toFloat()
                 val angle = Math.toRadians((StartAngle + SweepAngle * f).toDouble())
-                val len = if (i % 5 == 0) tickMajor else tickLen
+                val len = if ((i * tickPercent).roundToInt() % 10 == 0) tickMajor else tickLen
                 val on = f <= shownFraction && percent > 0
                 drawLine(
                     color = if (on) active else inactive,
@@ -210,4 +224,10 @@ private fun fractionFromTouch(center: Offset, touch: Offset, previous: Float): F
     var relative = degrees - StartAngle
     if (relative < 0) relative += 360f
     return if (relative <= SweepAngle) relative / SweepAngle else if (previous > 0.5f) 1f else 0f
+}
+
+/** Nearest multiple of [step] percent for a 0..1 dial fraction (the detent the knob clicks into). */
+internal fun snapToStep(fraction: Float, step: Int): Int {
+    val s = step.coerceAtLeast(1)
+    return ((fraction * 100f / s).roundToInt() * s).coerceIn(0, 100)
 }

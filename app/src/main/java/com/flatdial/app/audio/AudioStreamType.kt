@@ -8,8 +8,7 @@ import com.flatdial.app.R
 enum class AudioStreamType(
     val androidStream: Int,
     @StringRes val label: Int,
-    @StringRes val statusLabel: Int,
     @StringRes val dialLabel: Int,
 ) {
-    Media(AudioManager.STREAM_MUSIC, R.string.stream_media, R.string.status_media_stream, R.string.dial_label_media),
+    Media(AudioManager.STREAM_MUSIC, R.string.stream_media, R.string.dial_label_media),
 }

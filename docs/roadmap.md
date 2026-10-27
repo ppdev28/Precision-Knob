@@ -35,6 +35,7 @@ Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfile
 - ⬜ A/B rápido (activar/desactivar el EQ con un toque)
 
 ## Fase 3 – Calidad
+- ✅ Dial por pasos configurable y háptica propia (antes usaba la háptica de Compose, que no vibraba en el teléfono del usuario)
 - ⬜ Tests de UI del dial y de la pantalla EQ; previews de Compose
 - ⬜ Fuente DM Sans y pulido visual frente a `screenshoot_UI.png`
 - ⬜ Manejo de errores de red y modo sin conexión más claro

@@ -44,12 +44,15 @@ class EqController(
     fun start() {
         scope.launch {
             val saved = settings.settings.first()
-            _state.value = EqState(
-                enabled = saved.eqEnabled,
-                profiles = profiles.profiles.value,
-                selectedId = saved.selectedProfileId,
-                fxAvailable = fx.eqAvailable.value,
-            )
+            // copy(), not a new EqState: the collectors below may already have set processingOn / fxAvailable.
+            _state.update {
+                it.copy(
+                    enabled = saved.eqEnabled,
+                    profiles = profiles.profiles.value,
+                    selectedId = saved.selectedProfileId,
+                    processingOn = saved.processingEnabled,
+                )
+            }
             apply()
         }
         scope.launch { profiles.profiles.collect { list -> _state.update { it.copy(profiles = list) } } }

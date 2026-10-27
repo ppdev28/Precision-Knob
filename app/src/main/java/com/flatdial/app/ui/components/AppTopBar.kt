@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.GraphicEq
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -18,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -25,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.flatdial.app.R
 import com.flatdial.app.ui.theme.Radius
 import com.flatdial.app.ui.theme.Spacing
+import com.flatdial.app.ui.theme.flatSwitchColors
 
 @Composable
 fun AppTopBar(
-    statusLabel: String,
     processingOn: Boolean,
     onProcessingChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -43,14 +42,18 @@ fun AppTopBar(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(Radius.medium - 4.dp)),
+                    .background(MaterialTheme.colorScheme.secondary, RoundedCornerShape(Radius.medium - 4.dp)),
                 contentAlignment = Alignment.Center,
             ) {
-                Icon(Icons.Outlined.GraphicEq, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimary)
+                Icon(
+                    painter = painterResource(R.drawable.ic_logo),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSecondary,
+                    modifier = Modifier.size(30.dp),
+                )
             }
             Column(modifier = Modifier.padding(start = Spacing.s + Spacing.xs)) {
                 Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge)
-                Text(statusLabel, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary)
             }
         }
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -58,6 +61,7 @@ fun AppTopBar(
             Switch(
                 checked = processingOn,
                 onCheckedChange = onProcessingChange,
+                colors = flatSwitchColors(),
                 modifier = Modifier.semantics { contentDescription = processingLabel },
             )
         }
