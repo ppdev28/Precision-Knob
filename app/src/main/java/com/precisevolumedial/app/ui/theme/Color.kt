@@ -2,37 +2,37 @@ package com.precisevolumedial.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Accents come from one hue family (~168°, the teal-green of secondaryContainer).
+// Accents come from one hue family: sage green (~135°, desaturated).
 // Dark backgrounds and surfaces stay near-black; only borders and secondary text carry a hint of the hue.
 
 // Dark (default)
-val BackgroundDark = Color(0xFF050608)
-val BottomBarDark = Color(0xFF0D1013)
-val SurfaceDark = Color(0xFF14171C)
-val SurfaceHighDark = Color(0xFF1F242B)
-val OutlineDark = Color(0xFF3C4846)
+val BackgroundDark = Color(0xFF070908)
+val BottomBarDark = Color(0xFF0E1210)
+val SurfaceDark = Color(0xFF151A17)
+val SurfaceHighDark = Color(0xFF212825)
+val OutlineDark = Color(0xFF414B45)
 val TextPrimaryDark = Color(0xFFFFFFFF)
-val TextSecondaryDark = Color(0xFFBCC8C5)
+val TextSecondaryDark = Color(0xFFBAC5BD)
 
 /** Primary accent: dial arc, buttons. */
-val PrimaryDark = Color(0xFF5FE0C2)
-val OnPrimaryDark = Color(0xFF00201A)
-val PrimaryContainerDark = Color(0xFF17493F)
+val PrimaryDark = Color(0xFFA9C7A6)
+val OnPrimaryDark = Color(0xFF0E1A10)
+val PrimaryContainerDark = Color(0xFF30443A)
 
 /** Secondary accent: logo tile, switches, selected navigation item. */
-val SecondaryDark = Color(0xFF5FE0C2)
-val OnSecondaryDark = Color(0xFF00201A)
-val SecondaryContainerDark = Color(0xFF17493F)
+val SecondaryDark = Color(0xFFA9C7A6)
+val OnSecondaryDark = Color(0xFF0E1A10)
+val SecondaryContainerDark = Color(0xFF30443A)
 
 // Light
-val BackgroundLight = Color(0xFFF0F5F4)
-val BottomBarLight = Color(0xFFE1EAE8)
+val BackgroundLight = Color(0xFFF2F5F2)
+val BottomBarLight = Color(0xFFE3EAE3)
 val SurfaceLight = Color(0xFFFFFFFF)
-val SurfaceHighLight = Color(0xFFD9E2E1)
-val OutlineLight = Color(0xFF7B8E8A)
-val TextPrimaryLight = Color(0xFF0A100F)
-val TextSecondaryLight = Color(0xFF404F4C)
-val PrimaryLight = Color(0xFF00695C)
-val PrimaryContainerLight = Color(0xFFBDEFE4)
-val SecondaryLight = Color(0xFF00695C)
-val SecondaryContainerLight = Color(0xFFBDEFE4)
+val SurfaceHighLight = Color(0xFFDAE3DB)
+val OutlineLight = Color(0xFF7D8D80)
+val TextPrimaryLight = Color(0xFF0B100C)
+val TextSecondaryLight = Color(0xFF414F44)
+val PrimaryLight = Color(0xFF3F6B4A)
+val PrimaryContainerLight = Color(0xFFD0E6D1)
+val SecondaryLight = Color(0xFF3F6B4A)
+val SecondaryContainerLight = Color(0xFFD0E6D1)
