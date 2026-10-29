@@ -30,6 +30,8 @@ Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfile
 - ⬜ EQ más fiel: `DynamicsProcessing` por sesión de audio (detectar sesiones, `DUMP` por ADB) como hace Precise Volume
 - ⬜ Validar en el teléfono que el EQ suena como el perfil (comparar con/sin; revisar que no haya clipping con el preamp)
 - ⬜ Perfil automático por dispositivo de salida (auriculares Bluetooth/cable conectados)
+- ✅ Anti-EQ manual para equipos externos (5 bandas, presets)
+- ⬜ Anti-EQ medido con el micrófono (barrido + respuesta inversa), más preciso pero más complejo
 - ⬜ Otros formatos: `GraphicEQ.txt`, `FixedBandEQ.txt`
 - ⬜ Favoritos, filtro por tipo (in-ear/over-ear) y por fuente de medición
 - ⬜ A/B rápido (activar/desactivar el EQ con un toque)
