@@ -21,7 +21,20 @@ Objetivo de la app: **control fino del volumen (de 1% en 1%)** y **ecualización
 - Curva de respuesta calculada con los filtros reales del perfil (PK, LS/LSC, HS/HSC) y preamp.
 - El perfil se aproxima a las 5 bandas del ecualizador del sistema; no reproduce picos estrechos.
 
+## Volume Button Override (Settings → Controls) — beta
+Los botones físicos de volumen mueven el volumen multimedia con la resolución fina (1 % por defecto) **en cualquier app**, y se muestra un popup propio en lugar del del sistema.
+- Pantalla `OverrideScreen`: interruptor general, aviso si falta activar el servicio de accesibilidad (botón que abre los ajustes del sistema), interruptores por situación (**dispositivo desbloqueado**, **bloqueado**, **pantalla apagada**), estilo del popup (Sage accent / Dark / Light) y *Tweaks*: paso por pulsación (1, 2 o 5 %) y lado del popup (derecha / izquierda).
+- Requiere activar **Precise Volume Dial** en Ajustes → Accesibilidad. El servicio solo pide filtrar teclas; no lee contenido de pantalla.
+- Durante llamadas o con el teléfono sonando (`AudioManager.mode != MODE_NORMAL`) no interviene: las teclas siguen controlando ese volumen.
+- El **interruptor de la pantalla Volume** (procesamiento de audio) también apaga el override: con él apagado las teclas vuelven al sistema, y `OverrideScreen` lo avisa. El ajuste propio del override se conserva.
+- Sin procesamiento de audio (o si el dispositivo no admite el efecto), cada pulsación es un paso nativo del sistema.
+- El popup es interactivo: toca el botón de arriba para silenciar/restaurar y arrastra la pista para fijar el volumen; el dial de la app se actualiza al mismo tiempo.
+- El botón **"…"** de abajo despliega los tres volúmenes (**Media, Ring y Alarm**) para ajustar el timbre y la alarma sin desactivar la app. Ring y Alarm usan los pasos nativos del sistema (la atenuación fina solo existe en Media); las teclas siguen moviendo Media. Con el modo No molestar activo, algunos móviles no dejan cambiar Ring: queda como estaba.
+- Con la pantalla apagada se cambia el volumen sin popup. Que el sistema entregue las teclas al servicio con la pantalla apagada o bloqueada depende del fabricante.
+
 ## Settings
+Mismo estilo que `OverrideScreen`: filas con icono a la izquierda sobre el fondo de la app, cabeceras de sección en color primario y separadores (componentes `ClickRow` / `SwitchRow` compartidos).
+- Controles: acceso a Volume Button Override.
 - Audio: procesamiento de audio (interruptor general), mostrar porcentaje, háptica.
 - Apariencia: oscuro, claro, seguir sistema.
 - Info: versión, privacidad (sin datos; red solo para descargar perfiles), permisos y límites.

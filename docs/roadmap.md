@@ -1,6 +1,6 @@
 # Roadmap
 
-La app se llama **FlatDial** (antes SonicDial); paquete `com.flatdial.app`.
+La app se llama **Precise Volume Dial** (antes SonicDial y FlatDial); paquete `com.precisevolumedial.app`.
 
 Estado: ✅ hecho · 🚧 en curso · ⬜ pendiente
 
@@ -37,8 +37,19 @@ Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfile
 ## Fase 3 – Calidad
 - ✅ Dial por pasos configurable y háptica propia (antes usaba la háptica de Compose, que no vibraba en el teléfono del usuario)
 - ⬜ Tests de UI del dial y de la pantalla EQ; previews de Compose
-- ⬜ Fuente DM Sans y pulido visual frente a `screenshoot_UI.png`
+- ✅ Paleta salvia (se quitó la menta)
+- ⬜ Fuente DM Sans y pulido visual frente a `screenshoots/screenshoot_UI.png`
 - ⬜ Manejo de errores de red y modo sin conexión más claro
+
+## Fase 3b – Override de botones de volumen 🚧
+- ✅ Servicio de accesibilidad que captura las teclas, paso configurable, reglas desbloqueado / bloqueado / pantalla apagada
+- ✅ Popup propio (3 estilos, lado derecho/izquierdo) y pantalla de ajustes `OverrideScreen`
+- ✅ Validado con las teclas físicas en el Redmi Note 8 Pro
+- ✅ El interruptor de la pantalla Volume desactiva también el override
+- ⬜ Validar en el RMX3370 y con el teléfono bloqueado / pantalla apagada
+- ✅ Popup interactivo (botón de silencio y arrastre) y sincronizado con el dial
+- ✅ Botón "..." del popup con Ring y Alarm, como en `screenshoots/feature-override.png`
+- ⬜ Aceleración al mantener pulsada la tecla; ocultar el popup en pantalla completa/juegos si molesta
 
 ## Fase 4 – Experiencia y publicación
 - ⬜ Quick Settings tile y widget con volumen fino

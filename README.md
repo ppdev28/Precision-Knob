@@ -1,23 +1,25 @@
-# FlatDial
+# Precise Volume Dial
 
 Native Android (Kotlin + Jetpack Compose + Material 3) volume controller built around a rotary dial, with 1% media volume steps and AutoEq headphone profiles.
-UI reference: `screenshoot_UI.png`.
+UI reference: `screenshoots/screenshoot_UI.png`.
 
 ## Screens
 - **Volume** – `RotaryDial` (media only), mute/down/up, processing on/off switch, status line.
 - **EQ Correction** – headphone correction profiles from AutoEq (search/download or import `ParametricEQ.txt`), response curve (no graphic EQ: the screen only corrects the headphones' own curve).
+- **Volume Button Override** (Settings → Controls) – hardware volume keys move the media volume in fine steps in any app, with its own popup (accessibility service, beta).
 - **Settings** – default stream, percentage/haptics toggles, theme, app info.
 
 ## Layout
 ```
-app/src/main/java/com/flatdial/app/
+app/src/main/java/com/precisevolumedial/app/
   audio/   AudioStreamType, VolumeController, VolumeMapper, AudioFxEngine, eq/ (AutoEq parser, biquads, EqController)
   data/    SettingsRepository (DataStore)
+  override/ VolumeKeyService (accessibility), OverrideRules, VolumePopup
   ui/
-    theme/       colors, type, 8dp spacing
+    theme/       colors (sage), type, 8dp spacing
     components/  RotaryDial, StreamSelector, QuickControls, AppTopBar, EQ widgets
     volume/ equalizer/ settings/   screen + ViewModel each
-    FlatDialApp.kt   nav host + bottom bar
+    PreciseVolumeDialApp.kt   nav host + bottom bar
 ```
 
 ## Build

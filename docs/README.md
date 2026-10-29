@@ -1,4 +1,4 @@
-# FlatDial – Documentación
+# Precise Volume Dial – Documentación
 
 | Documento | Contenido |
 |---|---|
@@ -8,4 +8,4 @@
 | [design-system.md](design-system.md) | Colores, tipografía, espaciado y componentes |
 | [roadmap.md](roadmap.md) | Fases planificadas y estado |
 
-Referencia visual: [`../screenshoot_UI.png`](../screenshoot_UI.png).
+Referencias visuales: [`../screenshoots/screenshoot_UI.png`](../screenshoots/screenshoot_UI.png) y [`../screenshoots/feature-override.png`](../screenshoots/feature-override.png).

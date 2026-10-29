@@ -1,4 +1,4 @@
-# FlatDial – project instructions
+# PreciseVolumeDial – project instructions
 
 Native Android app (Kotlin, Jetpack Compose, Material 3). Overview in `README.md`, details in `docs/`.
 
@@ -7,6 +7,12 @@ Native Android app (Kotlin, Jetpack Compose, Material 3). Overview in `README.md
 export JAVA_HOME="<Android Studio>/Contents/jbr/Contents/Home"   # JDK 17
 ./gradlew :app:testDebugUnitTest :app:assembleDebug
 ```
+
+## Devices and docs
+- **Redmi Note 8 Pro**: test device, `adb` is free to use (install, logcat, screencap). Check `adb devices -l` first.
+- **Realme RMX3370 (rx330)**: the user's own phone, **never** connect via `adb` or any other route; the user tests there.
+- After finishing anything substantial, update `README.md` and `docs/` (features, architecture, roadmap, design-system) in the same change.
+- `adb shell input keyevent` does not go through the accessibility key filter: test the volume button override with the physical keys.
 
 ## Commits: Conventional Commits (always)
 Every commit follows [Conventional Commits 1.0](https://www.conventionalcommits.org/en/v1.0.0/). Commit only when asked.
