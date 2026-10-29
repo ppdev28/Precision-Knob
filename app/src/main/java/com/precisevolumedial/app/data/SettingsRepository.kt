@@ -12,6 +12,11 @@ import kotlinx.coroutines.flow.map
 
 enum class ThemeMode { Dark, Light, System }
 
+/** Look of the on-screen volume popup shown by the volume button override. */
+enum class PopupStyle { Accent, Dark, Light }
+
+enum class PopupSide { Right, Left }
+
 data class AppSettings(
     val showPercent: Boolean = true,
     val haptics: Boolean = true,
@@ -22,10 +27,22 @@ data class AppSettings(
     val selectedProfileId: String? = null,
     /** Master switch: when false the audio effects are released and no background service runs. */
     val processingEnabled: Boolean = true,
+    /** Volume button override: the hardware keys move the media volume in fine steps in any app. */
+    val overrideEnabled: Boolean = false,
+    val overrideUnlocked: Boolean = true,
+    val overrideLocked: Boolean = true,
+    val overrideScreenOff: Boolean = true,
+    /** Percent moved by each key press. */
+    val overrideStep: Int = 1,
+    val popupStyle: PopupStyle = PopupStyle.Accent,
+    val popupSide: PopupSide = PopupSide.Right,
 )
 
 /** Allowed dial detent sizes (all divide 100). */
 val DialSteps = listOf(1, 2, 5, 10)
+
+/** Allowed volume key step sizes in percent. */
+val OverrideSteps = listOf(1, 2, 5)
 
 private val Context.dataStore by preferencesDataStore(name = "precisevolumedial_settings")
 
@@ -38,6 +55,13 @@ class SettingsRepository(private val context: Context) {
         val eqEnabled = booleanPreferencesKey("eq_enabled")
         val selectedProfile = stringPreferencesKey("selected_profile")
         val processing = booleanPreferencesKey("processing_enabled")
+        val overrideEnabled = booleanPreferencesKey("override_enabled")
+        val overrideUnlocked = booleanPreferencesKey("override_unlocked")
+        val overrideLocked = booleanPreferencesKey("override_locked")
+        val overrideScreenOff = booleanPreferencesKey("override_screen_off")
+        val overrideStep = intPreferencesKey("override_step")
+        val popupStyle = stringPreferencesKey("popup_style")
+        val popupSide = stringPreferencesKey("popup_side")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { prefs ->
@@ -50,6 +74,13 @@ class SettingsRepository(private val context: Context) {
             eqEnabled = prefs[Keys.eqEnabled] ?: defaults.eqEnabled,
             selectedProfileId = prefs[Keys.selectedProfile],
             processingEnabled = prefs[Keys.processing] ?: defaults.processingEnabled,
+            overrideEnabled = prefs[Keys.overrideEnabled] ?: defaults.overrideEnabled,
+            overrideUnlocked = prefs[Keys.overrideUnlocked] ?: defaults.overrideUnlocked,
+            overrideLocked = prefs[Keys.overrideLocked] ?: defaults.overrideLocked,
+            overrideScreenOff = prefs[Keys.overrideScreenOff] ?: defaults.overrideScreenOff,
+            overrideStep = prefs[Keys.overrideStep]?.takeIf { it in OverrideSteps } ?: defaults.overrideStep,
+            popupStyle = prefs.enumOrNull<PopupStyle>(Keys.popupStyle) ?: defaults.popupStyle,
+            popupSide = prefs.enumOrNull<PopupSide>(Keys.popupSide) ?: defaults.popupSide,
         )
     }
 
@@ -59,6 +90,13 @@ class SettingsRepository(private val context: Context) {
     suspend fun setThemeMode(value: ThemeMode) = edit { it[Keys.themeMode] = value.name }
 
     suspend fun setProcessingEnabled(value: Boolean) = edit { it[Keys.processing] = value }
+    suspend fun setOverrideEnabled(value: Boolean) = edit { it[Keys.overrideEnabled] = value }
+    suspend fun setOverrideUnlocked(value: Boolean) = edit { it[Keys.overrideUnlocked] = value }
+    suspend fun setOverrideLocked(value: Boolean) = edit { it[Keys.overrideLocked] = value }
+    suspend fun setOverrideScreenOff(value: Boolean) = edit { it[Keys.overrideScreenOff] = value }
+    suspend fun setOverrideStep(value: Int) = edit { it[Keys.overrideStep] = value }
+    suspend fun setPopupStyle(value: PopupStyle) = edit { it[Keys.popupStyle] = value.name }
+    suspend fun setPopupSide(value: PopupSide) = edit { it[Keys.popupSide] = value.name }
     suspend fun setEqEnabled(value: Boolean) = edit { it[Keys.eqEnabled] = value }
     suspend fun setSelectedProfile(id: String?) = edit { if (id == null) it.remove(Keys.selectedProfile) else it[Keys.selectedProfile] = id }
 

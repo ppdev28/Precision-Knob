@@ -3,8 +3,12 @@
     <string name="app_name">Precise Volume Dial</string>
 
     <string name="stream_media">Media</string>
+    <string name="stream_ring">Ring</string>
+    <string name="stream_alarm">Alarm</string>
 
     <string name="dial_label_media">MEDIA VOLUME</string>
+    <string name="dial_label_ring">RING VOLUME</string>
+    <string name="dial_label_alarm">ALARM VOLUME</string>
     <string name="dial_system_step">System step %1$d of %2$d</string>
     <string name="dial_unavailable">Unavailable</string>
 
@@ -76,4 +80,29 @@
     <string name="settings_dial_step">Dial step</string>
     <string name="settings_dial_step_summary">The knob clicks into place every step. Up and Down always move 1%.</string>
     <string name="dial_step_option">%1$d%%</string>
+
+    <string name="override_service_description">Lets Precise Volume Dial read the volume buttons so they move the media volume in fine steps in any app, on the lock screen and with the screen off. It does not read any screen content.</string>
+    <string name="settings_section_controls">Controls</string>
+    <string name="override_title">Volume Button Override</string>
+    <string name="override_enabled">Enabled</string>
+    <string name="override_info">Override volume buttons and get volume precision in any app.</string>
+    <string name="override_needs_service">Turn on “Precise Volume Dial” in Accessibility settings so the app can read the volume buttons.</string>
+    <string name="override_open_accessibility">Open accessibility settings</string>
+    <string name="override_unlocked">When device is unlocked</string>
+    <string name="override_unlocked_summary">Override built-in popup slider</string>
+    <string name="override_locked">When device is locked</string>
+    <string name="override_screen_off">When screen is off</string>
+    <string name="override_on">Enabled</string>
+    <string name="override_off">Disabled</string>
+    <string name="override_popup_style">Popup style/theme</string>
+    <string name="popup_style_accent">Sage accent</string>
+    <string name="popup_style_dark">Dark</string>
+    <string name="popup_style_light">Light</string>
+    <string name="override_section_tweaks">Tweaks</string>
+    <string name="override_step">Step per button press</string>
+    <string name="override_popup_side">Popup position</string>
+    <string name="popup_side_right">Right edge</string>
+    <string name="popup_side_left">Left edge</string>
+    <string name="override_calls_note">Calls and ringing keep the system volume behavior.</string>
+    <string name="override_processing_off">Audio processing is off, so the override is paused. Turn it on with the switch on the home screen.</string>
 </resources>

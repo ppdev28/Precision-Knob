@@ -10,6 +10,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Adjust
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.GraphicEq
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Percent
+import androidx.compose.material.icons.filled.PrivacyTip
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.SettingsRemote
+import androidx.compose.material.icons.filled.Vibration
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItemDefaults
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
@@ -45,6 +58,7 @@ import com.precisevolumedial.app.ui.theme.appSwitchColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    onOpenOverride: () -> Unit = {},
     viewModel: SettingsViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val settings by viewModel.settings.collectAsStateWithLifecycle()
@@ -64,34 +78,52 @@ fun SettingsScreen(
         },
     ) { padding ->
         Column(modifier = Modifier.padding(padding).fillMaxSize().verticalScroll(rememberScrollState())) {
+            SectionHeader(R.string.settings_section_controls)
+            ClickRow(
+                title = stringResource(R.string.override_title),
+                summary = stringResource(if (settings.overrideEnabled) R.string.override_on else R.string.override_off),
+                icon = Icons.Filled.SettingsRemote,
+                onClick = onOpenOverride,
+            )
+
+            HorizontalDivider(Modifier.padding(vertical = Spacing.s))
             SectionHeader(R.string.settings_section_audio)
             SwitchRow(
                 stringResource(R.string.settings_processing),
                 stringResource(R.string.settings_processing_summary),
                 settings.processingEnabled,
-                viewModel::setProcessingEnabled,
+                Icons.Filled.GraphicEq,
+                onChange = viewModel::setProcessingEnabled,
             )
-            SwitchRow(stringResource(R.string.settings_show_percent), null, settings.showPercent, viewModel::setShowPercent)
+            SwitchRow(stringResource(R.string.settings_show_percent), null, settings.showPercent, Icons.Filled.Percent, onChange = viewModel::setShowPercent)
             ClickRow(
                 title = stringResource(R.string.settings_dial_step),
                 summary = stringResource(R.string.dial_step_option, settings.dialStep) + " · " + stringResource(R.string.settings_dial_step_summary),
+                icon = Icons.Filled.Adjust,
                 onClick = { showStepDialog = true },
             )
-            SwitchRow(stringResource(R.string.settings_haptics), stringResource(R.string.settings_haptics_summary), settings.haptics, viewModel::setHaptics)
+            SwitchRow(
+                stringResource(R.string.settings_haptics),
+                stringResource(R.string.settings_haptics_summary),
+                settings.haptics,
+                Icons.Filled.Vibration,
+                onChange = viewModel::setHaptics,
+            )
 
             HorizontalDivider(Modifier.padding(vertical = Spacing.s))
             SectionHeader(R.string.settings_section_appearance)
             ClickRow(
                 title = stringResource(R.string.settings_theme),
                 summary = stringResource(settings.themeMode.label()),
+                icon = Icons.Filled.DarkMode,
                 onClick = { showThemeDialog = true },
             )
 
             HorizontalDivider(Modifier.padding(vertical = Spacing.s))
             SectionHeader(R.string.settings_section_about)
-            InfoRow(stringResource(R.string.settings_version), BuildConfig.VERSION_NAME)
-            InfoRow(stringResource(R.string.settings_privacy), stringResource(R.string.settings_privacy_summary))
-            InfoRow(stringResource(R.string.settings_permissions), stringResource(R.string.settings_permissions_summary))
+            InfoRow(Icons.Filled.Info, stringResource(R.string.settings_version), BuildConfig.VERSION_NAME)
+            InfoRow(Icons.Filled.PrivacyTip, stringResource(R.string.settings_privacy), stringResource(R.string.settings_privacy_summary))
+            InfoRow(Icons.Filled.Security, stringResource(R.string.settings_permissions), stringResource(R.string.settings_permissions_summary))
         }
     }
 
@@ -124,7 +156,7 @@ private fun ThemeMode.label(): Int = when (this) {
 }
 
 @Composable
-private fun SectionHeader(title: Int) {
+internal fun SectionHeader(title: Int) {
     Text(
         stringResource(title),
         style = MaterialTheme.typography.labelLarge,
@@ -134,31 +166,50 @@ private fun SectionHeader(title: Int) {
 }
 
 @Composable
-private fun ClickRow(title: String, summary: String, onClick: () -> Unit) {
+private fun rowColors() = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background)
+
+@Composable
+internal fun ClickRow(title: String, summary: String, icon: ImageVector? = null, onClick: () -> Unit) {
     ListItem(
+        leadingContent = icon?.let { { Icon(it, contentDescription = null) } },
         headlineContent = { Text(title) },
         supportingContent = { Text(summary) },
+        colors = rowColors(),
         modifier = Modifier.clickable(onClick = onClick),
     )
 }
 
 @Composable
-private fun SwitchRow(title: String, summary: String?, checked: Boolean, onChange: (Boolean) -> Unit) {
+internal fun SwitchRow(
+    title: String,
+    summary: String?,
+    checked: Boolean,
+    icon: ImageVector? = null,
+    enabled: Boolean = true,
+    onChange: (Boolean) -> Unit,
+) {
     ListItem(
+        leadingContent = icon?.let { { Icon(it, contentDescription = null) } },
         headlineContent = { Text(title) },
         supportingContent = summary?.let { { Text(it) } },
-        trailingContent = { Switch(checked = checked, onCheckedChange = null, colors = appSwitchColors()) },
-        modifier = Modifier.clickable(role = Role.Switch) { onChange(!checked) },
+        trailingContent = { Switch(checked = checked, onCheckedChange = null, enabled = enabled, colors = appSwitchColors()) },
+        colors = rowColors(),
+        modifier = Modifier.clickable(enabled = enabled, role = Role.Switch) { onChange(!checked) },
     )
 }
 
 @Composable
-private fun InfoRow(title: String, summary: String) {
-    ListItem(headlineContent = { Text(title) }, supportingContent = { Text(summary) })
+private fun InfoRow(icon: ImageVector, title: String, summary: String) {
+    ListItem(
+        leadingContent = { Icon(icon, contentDescription = null) },
+        headlineContent = { Text(title) },
+        supportingContent = { Text(summary) },
+        colors = rowColors(),
+    )
 }
 
 @Composable
-private fun <T> ChoiceDialog(
+internal fun <T> ChoiceDialog(
     title: String,
     options: List<T>,
     selected: T,

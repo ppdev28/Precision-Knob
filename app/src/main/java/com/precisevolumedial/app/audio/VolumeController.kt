@@ -9,7 +9,10 @@ import android.os.Looper
 import android.os.SystemClock
 import android.provider.Settings
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.callbackFlow
 import kotlin.math.roundToInt
 
@@ -37,6 +40,9 @@ class VolumeController(context: Context, private val fx: AudioFxEngine) {
     private val percentBeforeMute = mutableMapOf<AudioStreamType, Int>()
     private val tableCache = mutableMapOf<Triple<Int, Int, Int>, List<Float>>()
 
+    /** Volume moved by this app (service, dial, popup): fine trim changes never reach the system observer. */
+    private val local = MutableSharedFlow<Unit>(extraBufferCapacity = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+
     private var trimDb = 0f
     private var lastSetLevel: Int? = null
     private var lastSetAt = 0L
@@ -54,7 +60,8 @@ class VolumeController(context: Context, private val fx: AudioFxEngine) {
         if (max <= min) return base
 
         if (!isFine(stream)) {
-            trimDb = 0f
+            // The trim belongs to Media only: reading Ring or Alarm (the popup does) must not clear it.
+            if (stream == AudioStreamType.Media) trimDb = 0f
             return base.copy(percent = (((level - min) * 100f) / (max - min)).roundToInt().coerceIn(0, 100))
         }
         detectExternalChange(level)
@@ -100,13 +107,17 @@ class VolumeController(context: Context, private val fx: AudioFxEngine) {
     }
 
     private fun setLevel(stream: AudioStreamType, level: Int): StreamVolume {
-        lastSetLevel = level
-        lastSetAt = SystemClock.uptimeMillis()
+        if (stream == AudioStreamType.Media) {
+            lastSetLevel = level
+            lastSetAt = SystemClock.uptimeMillis()
+        }
         try {
             audioManager.setStreamVolume(stream.androidStream, level, 0)
         } catch (_: SecurityException) {
             // Some ROMs refuse volume changes (e.g. Do Not Disturb policy); the state is re-read below.
         }
+        // Notify only now: trim and system step are both applied, so a listener never reads a half-updated state.
+        local.tryEmit(Unit)
         return read(stream)
     }
 
@@ -137,8 +148,10 @@ class VolumeController(context: Context, private val fx: AudioFxEngine) {
         return DevicePriority.firstOrNull { it in connected } ?: AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
     }
 
-    /** Emits whenever any system volume changes (hardware keys, other apps, system UI). */
-    fun changes(): Flow<Unit> = callbackFlow {
+    /** Emits whenever any volume changes (hardware keys, other apps, system UI, this app's own fine trim). */
+    fun changes(): Flow<Unit> = merge(local, systemChanges())
+
+    private fun systemChanges(): Flow<Unit> = callbackFlow {
         val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) {
                 trySend(Unit)

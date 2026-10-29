@@ -37,5 +37,19 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Keeps the global audio effect (equalizer and fine volume) alive while the app is in the background" />
         </service>
+
+        <!-- Volume button override: reads the volume keys in every app (no screen content is read). -->
+        <service
+            android:name=".override.VolumeKeyService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/volume_key_service" />
+        </service>
     </application>
 </manifest>

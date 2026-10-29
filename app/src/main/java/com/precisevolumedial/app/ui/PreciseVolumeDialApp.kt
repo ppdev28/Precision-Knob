@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.precisevolumedial.app.R
 import com.precisevolumedial.app.ui.equalizer.EqualizerScreen
 import com.precisevolumedial.app.ui.equalizer.ProfileSearchScreen
+import com.precisevolumedial.app.ui.settings.OverrideScreen
 import com.precisevolumedial.app.ui.settings.SettingsScreen
 import com.precisevolumedial.app.ui.settings.SettingsViewModel
 import com.precisevolumedial.app.ui.theme.PreciseVolumeDialTheme
@@ -40,6 +41,7 @@ private enum class Destination(val route: String, val label: Int, val icon: Imag
     Equalizer("equalizer", R.string.nav_equalizer, Icons.Filled.Tune),
     Profiles("profiles", R.string.search_title, null),
     Settings("settings", R.string.nav_settings, Icons.Filled.Settings),
+    Override("override", R.string.override_title, null),
 }
 
 @Composable
@@ -53,7 +55,7 @@ fun PreciseVolumeDialApp() {
         val backStack by navController.currentBackStackEntryAsState()
         val currentDestination = backStack?.destination
         val bottomDestinations = listOf(Destination.Volume, Destination.Equalizer, Destination.Settings)
-        val showBottomBar = currentDestination?.route in bottomDestinations.map { it.route }
+        val showBottomBar = currentDestination?.route in (bottomDestinations + Destination.Override).map { it.route }
 
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
@@ -62,7 +64,7 @@ fun PreciseVolumeDialApp() {
                     NavigationBar(containerColor = MaterialTheme.colorScheme.surfaceContainer) {
                         bottomDestinations.forEach { dest ->
                             NavigationBarItem(
-                                selected = currentDestination?.hierarchy?.any { it.route == dest.route } == true,
+                                selected = currentDestination?.hierarchy?.any { it.route == dest.route || (dest == Destination.Settings && it.route == Destination.Override.route) } == true,
                                 onClick = {
                                     navController.navigate(dest.route) {
                                         popUpTo(navController.graph.findStartDestination().id) { saveState = true }
@@ -91,7 +93,8 @@ fun PreciseVolumeDialApp() {
                     EqualizerScreen(onFindProfile = { navController.navigate(Destination.Profiles.route) })
                 }
                 composable(Destination.Profiles.route) { ProfileSearchScreen(onBack = { navController.popBackStack() }) }
-                composable(Destination.Settings.route) { SettingsScreen() }
+                composable(Destination.Settings.route) { SettingsScreen(onOpenOverride = { navController.navigate(Destination.Override.route) }) }
+                composable(Destination.Override.route) { OverrideScreen(onBack = { navController.popBackStack() }) }
             }
         }
     }
