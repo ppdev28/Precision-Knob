@@ -39,7 +39,9 @@ fun VolumeScreen(
 	val volume = state.volume
 	val stream = AudioStreamType.Media
 	
-	Column(modifier = modifier.fillMaxSize()) {
+	Column(modifier = modifier
+		.fillMaxSize()
+		.padding(Spacing.s)) {
 		AppTopBar(
 			processingOn = settings.processingEnabled,
 			onProcessingChange = viewModel::setProcessingEnabled,

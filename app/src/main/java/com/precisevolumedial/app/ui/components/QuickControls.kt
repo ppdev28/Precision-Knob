@@ -69,12 +69,12 @@ private fun QuickAction(
             modifier = Modifier
                 .size(56.dp) // >= 48dp touch target
                 .clip(CircleShape)
-                .background(if (accent) colors.primaryContainer else colors.surface)
+                .background(MaterialTheme.colorScheme.surface)
                 .border(1.dp, colors.outline, CircleShape)
                 .clickable(enabled = enabled, role = Role.Button, onClickLabel = label, onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
-            Icon(icon, contentDescription = null, tint = if (accent) colors.primary else colors.onSurface)
+            Icon(icon, contentDescription = null, tint = MaterialTheme.colorScheme.onSecondaryContainer)
         }
         Text(label, style = MaterialTheme.typography.labelLarge, color = colors.onSurfaceVariant, modifier = Modifier.padding(top = Spacing.xs))
     }
