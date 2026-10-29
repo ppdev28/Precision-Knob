@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +20,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -33,11 +38,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.precisevolumedial.app.R
+import com.precisevolumedial.app.audio.eq.ExternalEq
 import com.precisevolumedial.app.audio.eq.logSpaced
 import com.precisevolumedial.app.audio.eq.responseDb
 import com.precisevolumedial.app.ui.AppViewModelProvider
@@ -45,6 +52,7 @@ import com.precisevolumedial.app.ui.components.EqCurve
 import com.precisevolumedial.app.ui.theme.Radius
 import com.precisevolumedial.app.ui.theme.Spacing
 import com.precisevolumedial.app.ui.theme.appSwitchColors
+import kotlin.math.roundToInt
 
 @Composable
 fun EqualizerScreen(
@@ -151,6 +159,82 @@ fun EqualizerScreen(
                     )
                 }
             }
+        }
+
+        HorizontalDivider()
+        ExternalEqSection(
+            enabled = state.externalEnabled,
+            gains = state.externalGains,
+            onEnabledChange = viewModel::setExternalEnabled,
+            onGainsChange = viewModel::setExternalGains,
+        )
+    }
+}
+
+private fun bandLabel(hz: Float): String = if (hz >= 1000f) "${(hz / 1000f).toString().removeSuffix(".0")} kHz" else "${hz.toInt()} Hz"
+
+@Composable
+private fun presetLabel(key: String): String = stringResource(
+    when (key) {
+        "bass" -> R.string.anti_eq_preset_bass
+        "treble" -> R.string.anti_eq_preset_treble
+        "vshape" -> R.string.anti_eq_preset_vshape
+        else -> R.string.anti_eq_preset_flat
+    },
+)
+
+/** Anti-EQ: the user enters the tone settings of the equipment they are connected to; we apply the opposite. */
+@Composable
+private fun ExternalEqSection(
+    enabled: Boolean,
+    gains: List<Int>,
+    onEnabledChange: (Boolean) -> Unit,
+    onGainsChange: (List<Int>) -> Unit,
+) {
+    val colors = MaterialTheme.colorScheme
+    Column(
+        modifier = Modifier.padding(horizontal = Spacing.m),
+        verticalArrangement = Arrangement.spacedBy(Spacing.s),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Column(modifier = Modifier.weight(1f)) {
+                Text(stringResource(R.string.anti_eq_title), style = MaterialTheme.typography.labelLarge, color = colors.primary)
+                Text(stringResource(R.string.anti_eq_summary), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
+            }
+            Switch(checked = enabled, onCheckedChange = onEnabledChange, colors = appSwitchColors(), modifier = Modifier.padding(start = Spacing.m))
+        }
+        if (enabled) {
+            Row(
+                modifier = Modifier.horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(Spacing.s),
+            ) {
+                ExternalEq.Presets.forEach { (key, preset) ->
+                    FilterChip(
+                        selected = gains == preset,
+                        onClick = { onGainsChange(preset) },
+                        label = { Text(presetLabel(key)) },
+                    )
+                }
+            }
+            ExternalEq.BandsHz.forEachIndexed { band, hz ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(bandLabel(hz), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.width(64.dp))
+                    Slider(
+                        value = gains[band].toFloat(),
+                        onValueChange = { v -> onGainsChange(gains.toMutableList().also { it[band] = v.roundToInt() }) },
+                        valueRange = ExternalEq.MinDb.toFloat()..ExternalEq.MaxDb.toFloat(),
+                        modifier = Modifier.weight(1f),
+                    )
+                    Text(
+                        stringResource(R.string.anti_eq_gain, if (gains[band] > 0) "+${gains[band]}" else "${gains[band]}"),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.onSurfaceVariant,
+                        modifier = Modifier.width(64.dp),
+                        textAlign = TextAlign.End,
+                    )
+                }
+            }
+            Text(stringResource(R.string.anti_eq_note), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
         }
     }
 }

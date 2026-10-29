@@ -21,10 +21,20 @@ data class EqState(
     val selectedId: String? = null,
     val fxAvailable: Boolean = false,
     val processingOn: Boolean = true,
+    val externalEnabled: Boolean = false,
+    val externalGains: List<Int> = ExternalEq.Flat,
 ) {
     val selected: EqProfile? get() = profiles.firstOrNull { it.id == selectedId }
+    /** Headphone correction only (what the curve on the screen shows); the anti-EQ is independent of it. */
     val filters: List<ParametricFilter> get() = selected?.filters.orEmpty()
     val preampDb: Float get() = selected?.preampDb ?: 0f
+
+    /** What the audio effect receives: each of the two corrections counts only while its own switch is on. */
+    val fxEnabled: Boolean get() = enabled || externalEnabled
+    val fxFilters: List<ParametricFilter>
+        get() = (if (enabled) filters else emptyList()) + if (externalEnabled) ExternalEq.inverseFilters(externalGains) else emptyList()
+    val fxPreampDb: Float
+        get() = (if (enabled) preampDb else 0f) + if (externalEnabled) ExternalEq.preampDb(externalGains) else 0f
 }
 
 /**
@@ -51,6 +61,8 @@ class EqController(
                     profiles = profiles.profiles.value,
                     selectedId = saved.selectedProfileId,
                     processingOn = saved.processingEnabled,
+                    externalEnabled = saved.externalEqEnabled,
+                    externalGains = saved.externalEqGains,
                 )
             }
             apply()
@@ -67,6 +79,18 @@ class EqController(
         _state.update { it.copy(enabled = enabled) }
         apply()
         scope.launch { settings.setEqEnabled(enabled) }
+    }
+
+    fun setExternalEnabled(enabled: Boolean) {
+        _state.update { it.copy(externalEnabled = enabled) }
+        apply()
+        scope.launch { settings.setExternalEqEnabled(enabled) }
+    }
+
+    fun setExternalGains(gains: List<Int>) {
+        _state.update { it.copy(externalGains = gains) }
+        apply()
+        scope.launch { settings.setExternalEqGains(gains) }
     }
 
     fun select(id: String?) {
@@ -94,6 +118,6 @@ class EqController(
 
     private fun apply() {
         val s = _state.value
-        fx.setEq(s.enabled, s.preampDb, s.filters)
+        fx.setEq(s.fxEnabled, s.fxPreampDb, s.fxFilters)
     }
 }

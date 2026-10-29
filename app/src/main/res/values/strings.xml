@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Precise Volume Dial</string>
+    <string name="app_name">Precise Knob</string>
 
     <string name="stream_media">Media</string>
     <string name="stream_ring">Ring</string>
@@ -105,4 +105,13 @@
     <string name="popup_side_left">Left edge</string>
     <string name="override_calls_note">Calls and ringing keep the system volume behavior.</string>
     <string name="override_processing_off">Audio processing is off, so the override is paused. Turn it on with the switch on the home screen.</string>
+    <string name="anti_eq_title">Anti-EQ for external equipment</string>
+    <string name="anti_eq_summary">Radio, speaker or car stereo with its own EQ? Enter its tone settings and the app applies the opposite, so the sound reaches it flat.</string>
+    <string name="anti_eq_preset_flat">Flat</string>
+    <string name="anti_eq_preset_bass">Bass boost</string>
+    <string name="anti_eq_preset_treble">Treble boost</string>
+    <string name="anti_eq_preset_vshape">V shape</string>
+    <string name="anti_eq_band">%1$s</string>
+    <string name="anti_eq_gain">%1$s dB</string>
+    <string name="anti_eq_note">Set the sliders to what the other device is doing. It works on its own: it does not depend on the headphone correction above.</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.precisevolumedial.app.audio.eq.ExternalEq
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -36,6 +37,10 @@ data class AppSettings(
     val overrideStep: Int = 1,
     val popupStyle: PopupStyle = PopupStyle.Accent,
     val popupSide: PopupSide = PopupSide.Right,
+    /** Anti-EQ: cancel the tone settings of the radio/speaker the phone is connected to. */
+    val externalEqEnabled: Boolean = false,
+    /** Gains (dB) of the external device on the five anti-EQ bands. */
+    val externalEqGains: List<Int> = ExternalEq.Flat,
 )
 
 /** Allowed dial detent sizes (all divide 100). */
@@ -62,6 +67,8 @@ class SettingsRepository(private val context: Context) {
         val overrideStep = intPreferencesKey("override_step")
         val popupStyle = stringPreferencesKey("popup_style")
         val popupSide = stringPreferencesKey("popup_side")
+        val externalEqEnabled = booleanPreferencesKey("external_eq_enabled")
+        val externalEqGains = stringPreferencesKey("external_eq_gains")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { prefs ->
@@ -81,6 +88,8 @@ class SettingsRepository(private val context: Context) {
             overrideStep = prefs[Keys.overrideStep]?.takeIf { it in OverrideSteps } ?: defaults.overrideStep,
             popupStyle = prefs.enumOrNull<PopupStyle>(Keys.popupStyle) ?: defaults.popupStyle,
             popupSide = prefs.enumOrNull<PopupSide>(Keys.popupSide) ?: defaults.popupSide,
+            externalEqEnabled = prefs[Keys.externalEqEnabled] ?: defaults.externalEqEnabled,
+            externalEqGains = ExternalEq.parse(prefs[Keys.externalEqGains]),
         )
     }
 
@@ -97,6 +106,8 @@ class SettingsRepository(private val context: Context) {
     suspend fun setOverrideStep(value: Int) = edit { it[Keys.overrideStep] = value }
     suspend fun setPopupStyle(value: PopupStyle) = edit { it[Keys.popupStyle] = value.name }
     suspend fun setPopupSide(value: PopupSide) = edit { it[Keys.popupSide] = value.name }
+    suspend fun setExternalEqEnabled(value: Boolean) = edit { it[Keys.externalEqEnabled] = value }
+    suspend fun setExternalEqGains(value: List<Int>) = edit { it[Keys.externalEqGains] = ExternalEq.serialize(value) }
     suspend fun setEqEnabled(value: Boolean) = edit { it[Keys.eqEnabled] = value }
     suspend fun setSelectedProfile(id: String?) = edit { if (id == null) it.remove(Keys.selectedProfile) else it[Keys.selectedProfile] = id }
 

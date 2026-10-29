@@ -23,6 +23,8 @@ class EqualizerViewModel(container: AppContainer) : ViewModel() {
 
     fun setEnabled(enabled: Boolean) = eq.setEnabled(enabled)
     fun select(id: String?) = eq.select(id)
+    fun setExternalEnabled(enabled: Boolean) = eq.setExternalEnabled(enabled)
+    fun setExternalGains(gains: List<Int>) = eq.setExternalGains(gains)
     fun delete(id: String) = eq.delete(id)
     fun dismissImportError() { _importFailed.value = false }
 
