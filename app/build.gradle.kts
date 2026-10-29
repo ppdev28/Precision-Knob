@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.flatdial.app"
+    namespace = "com.precisevolumedial.app"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.flatdial.app"
+        applicationId = "com.precisevolumedial.app"
         minSdk = 28
         targetSdk = 35
         versionCode = 1

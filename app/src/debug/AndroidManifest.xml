@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
         <!-- Debug-only listening test for global audio effects. Start with:
-             adb shell am start -n com.flatdial.app/.debug.ToneTestActivity -->
+             adb shell am start -n com.precisevolumedial.app/.debug.ToneTestActivity -->
         <activity
             android:name=".debug.ToneTestActivity"
             android:exported="true" />

@@ -20,5 +20,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "FlatDial"
+rootProject.name = "PreciseVolumeDial"
 include(":app")

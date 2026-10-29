@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">FlatDial</string>
+    <string name="app_name">Precise Volume Dial</string>
 
     <string name="stream_media">Media</string>
 
@@ -34,7 +34,7 @@
     <string name="settings_section_about">App information</string>
     <string name="settings_version">Version</string>
     <string name="settings_privacy">Privacy</string>
-    <string name="settings_privacy_summary">FlatDial collects no data. The network is used only to download headphone profiles from the public AutoEq repository.</string>
+    <string name="settings_privacy_summary">Precise Volume Dial collects no data. The network is used only to download headphone profiles from the public AutoEq repository.</string>
     <string name="settings_permissions">Permissions and audio limitations</string>
     <string name="settings_permissions_summary">Fine volume and the equalizer use a global audio effect that not every device supports.</string>
     <string name="dialog_cancel">Cancel</string>
@@ -42,7 +42,7 @@
     <string name="fine_unavailable">Native steps only: this device does not allow the audio effect used for 1% control</string>
 
     <string name="fx_channel_name">Audio processing</string>
-    <string name="fx_notification_title">FlatDial audio processing active</string>
+    <string name="fx_notification_title">Precise Volume Dial audio processing active</string>
     <string name="fx_notification_text">Equalizer and fine volume are applied</string>
 
     <string name="eq_on">ON</string>
