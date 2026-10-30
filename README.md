@@ -52,6 +52,12 @@ Steel blue Material 3 theme, dark by default with light and system modes.
 
 Requires **Android 9 (API 28) or newer**.
 
+### If Android complains during install or setup
+Because the APK does not come from Google Play, Android adds two safeguards. Both are one-time steps:
+
+- **Play Protect blocks the install** ("unknown developer"): tap *More details → Install anyway*. You do not need to turn Play Protect off.
+- **"Restricted setting" when enabling the Volume Button Override** (Android 13+): open *Settings → Apps → Precise Knob*, tap the **⋮** menu (top right) → **Allow restricted settings**, then go back to *Accessibility* and turn the service on. If the menu is missing, open the accessibility service once first so the warning appears. The app has a shortcut to the app info on the override screen.
+
 > **Heads up:** fine volume and EQ rely on Android's global audio effects. Not every device or ROM honours them; the app detects this and falls back to the native steps. Tested on a Redmi Note 8 Pro and a Realme RMX3370.
 
 ## 🛠️ Build from source
