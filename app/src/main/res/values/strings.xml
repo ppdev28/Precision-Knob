@@ -95,7 +95,7 @@
     <string name="override_on">Enabled</string>
     <string name="override_off">Disabled</string>
     <string name="override_popup_style">Popup style/theme</string>
-    <string name="popup_style_accent">Sage accent</string>
+    <string name="popup_style_accent">Steel accent</string>
     <string name="popup_style_dark">Dark</string>
     <string name="popup_style_light">Light</string>
     <string name="override_section_tweaks">Tweaks</string>

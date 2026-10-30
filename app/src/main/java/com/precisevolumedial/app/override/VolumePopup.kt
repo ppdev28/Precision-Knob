@@ -34,8 +34,8 @@ private data class PopupColors(val panel: Color, val track: Color, val fill: Col
 
 private fun PopupStyle.colors() = when (this) {
     PopupStyle.Accent -> PopupColors(SurfaceDark, SurfaceHighDark, PrimaryDark, OnPrimaryDark, TextPrimaryDark, PrimaryDark)
-    PopupStyle.Dark -> PopupColors(SurfaceDark, SurfaceHighDark, Color(0xFFE6E9E6), SurfaceDark, TextPrimaryDark, Color(0xFFE6E9E6))
-    PopupStyle.Light -> PopupColors(SurfaceLight, Color(0xFFDAE3DB), PrimaryLight, SurfaceLight, TextPrimaryLight, PrimaryLight)
+    PopupStyle.Dark -> PopupColors(SurfaceDark, SurfaceHighDark, Color(0xFFE6EAEE), SurfaceDark, TextPrimaryDark, Color(0xFFE6EAEE))
+    PopupStyle.Light -> PopupColors(SurfaceLight, Color(0xFFD8E3EE), PrimaryLight, SurfaceLight, TextPrimaryLight, PrimaryLight)
 }
 
 /**
