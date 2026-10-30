@@ -5,7 +5,7 @@ UI reference: `screenshoots/screenshoot_UI.png`.
 
 ## Screens
 - **Volume** – `RotaryDial` (media only), mute/down/up, processing on/off switch, status line.
-- **EQ Correction** – headphone correction profiles from AutoEq (search/download or import `ParametricEQ.txt`), response curve (no graphic EQ: the screen only corrects the headphones' own curve).
+- **EQ Correction** – headphone correction profiles from AutoEq (search/download or import `ParametricEQ.txt`), response curve, plus a separate anti-EQ card whose curve shows the external device effect and the correction applied (no graphic EQ: the screen only corrects the headphones' own curve).
 - **Volume Button Override** (Settings → Controls) – hardware volume keys move the media volume in fine steps in any app, with its own popup (accessibility service, beta).
 - **Settings** – default stream, percentage/haptics toggles, theme, app info.
 

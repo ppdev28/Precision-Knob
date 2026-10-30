@@ -29,4 +29,4 @@ Tema claro en `Color.kt` con el mismo tono (primary `#3F6B4A`). El brillo (glow)
 Material 3 con fuente por defecto. Estilos propios: `DialValueStyle` (72sp) y `DialUnitStyle` (28sp). Pendiente: DM Sans.
 
 ## Componentes
-`AppTopBar`, `StreamSelector`, `RotaryDial`, `QuickControls`, `EqCurve`, `EqBandSlider`. Las filas de Settings usan `ListItem` estándar de Material 3.
+`AppTopBar`, `StreamSelector`, `RotaryDial`, `QuickControls`, `EqCurve` (admite una curva de referencia punteada), `EqBandSlider`. La pantalla EQ Correction agrupa cada función en una card redondeada con borde (`EqCard`): Headphones y Anti-EQ. Las filas de Settings usan `ListItem` estándar de Material 3.
