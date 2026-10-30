@@ -88,6 +88,8 @@
     <string name="override_info">Override volume buttons and get volume precision in any app.</string>
     <string name="override_needs_service">Turn on “Precise Knob” in Accessibility settings so the app can read the volume buttons.</string>
     <string name="override_open_accessibility">Open accessibility settings</string>
+    <string name="override_restricted_hint">Says “Restricted setting”? Android blocks apps installed from an APK. Open the app info, tap the ⋮ menu (top right) and choose “Allow restricted settings”, then turn the service on.</string>
+    <string name="override_open_app_info">Open app info</string>
     <string name="override_unlocked">When device is unlocked</string>
     <string name="override_unlocked_summary">Override built-in popup slider</string>
     <string name="override_locked">When device is locked</string>

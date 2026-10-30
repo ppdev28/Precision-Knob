@@ -1,6 +1,8 @@
 package com.precisevolumedial.app.ui.settings
 
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -84,6 +87,12 @@ fun OverrideScreen(
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    val openAppInfo = {
+        context.startActivity(
+            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", context.packageName, null))
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+        )
     }
     val openAccessibility = { context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
 
@@ -145,6 +154,18 @@ fun OverrideScreen(
                 NoteCard(Icons.Filled.Info, stringResource(R.string.override_needs_service)) {
                     Button(onClick = openAccessibility, modifier = Modifier.padding(top = Spacing.s)) {
                         Text(stringResource(R.string.override_open_accessibility))
+                    }
+                    // Android 13+ blocks accessibility services of apps installed from an APK until the user allows it.
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        Text(
+                            stringResource(R.string.override_restricted_hint),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(top = Spacing.m),
+                        )
+                        OutlinedButton(onClick = openAppInfo, modifier = Modifier.padding(top = Spacing.s)) {
+                            Text(stringResource(R.string.override_open_app_info))
+                        }
                     }
                 }
             }
