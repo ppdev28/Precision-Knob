@@ -31,7 +31,15 @@ Abrir la carpeta raíz, esperar el sync y ejecutar el módulo `app`.
 - *Failed to find Platform SDK with path: platforms;android-36*: instalar la plataforma desde SDK Manager.
 - *Unsupported class file major version*: Gradle usa un JDK distinto de 17+; revisar `JAVA_HOME`.
 - Probar en dispositivo real: los emuladores tienen pasos de volumen y política de ring distintos.
-- La compilación release no está firmada; añadir `signingConfig` antes de publicar.
+- Sin `keystore.properties` la compilación release sale sin firmar (ver "Publicar una versión").
+
+## Publicar una versión
+1. Subir `versionCode` y `versionName` en `app/build.gradle.kts`.
+2. Firma: `keystore.properties` en la raíz (en `.gitignore`, nunca se sube) con `storeFile`, `storePassword`, `keyAlias` y `keyPassword`. El keystore de release (`precise-knob-release.jks`, alias `precise-knob`) vive **fuera del repo** (`~/.keystores/`). Hay que guardar una copia de seguridad: sin esa clave no se pueden publicar actualizaciones de una app ya instalada.
+3. `./gradlew :app:testDebugUnitTest :app:assembleRelease` → `app/build/outputs/apk/release/app-release.apk` (R8 y recorte de recursos activos). Comprobar la firma con `apksigner verify --print-certs`.
+4. Renombrar a `PreciseKnob-<versión>.apk`, crear el tag `v<versión>` y subir la APK a una GitHub Release usando `docs/releases/v<versión>.md` como notas.
+
+Una APK de release no se puede instalar sobre una de debug (firma distinta): desinstalar primero.
 
 ## Tests
 ```bash
