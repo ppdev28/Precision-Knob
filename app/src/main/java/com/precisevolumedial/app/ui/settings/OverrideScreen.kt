@@ -152,27 +152,16 @@ fun OverrideScreen(
 
             val active = settings.overrideEnabled
             SwitchRow(stringResource(R.string.override_unlocked), stringResource(R.string.override_unlocked_summary), settings.overrideUnlocked, Icons.Filled.PhoneAndroid, active, viewModel::setOverrideUnlocked)
-            ClickRow(stringResource(R.string.override_popup_style), stringResource(settings.popupStyle.label()), Icons.Filled.Palette) { showStyle = true }
-            HorizontalDivider(Modifier.padding(vertical = Spacing.xs))
+            //ClickRow(stringResource(R.string.override_popup_style), stringResource(settings.popupStyle.label()), Icons.Filled.Palette) { showStyle = true }
             SwitchRow(stringResource(R.string.override_locked), stateSummary(settings.overrideLocked), settings.overrideLocked, Icons.Filled.Lock, active, viewModel::setOverrideLocked)
             SwitchRow(stringResource(R.string.override_screen_off), stateSummary(settings.overrideScreenOff), settings.overrideScreenOff, Icons.Filled.ScreenLockPortrait, active, viewModel::setOverrideScreenOff)
-
-            SectionHeader(R.string.override_section_tweaks)
+            
+            HorizontalDivider(Modifier.padding(vertical = Spacing.xs))
             ClickRow(stringResource(R.string.override_step), stringResource(R.string.dial_step_option, settings.overrideStep), Icons.Filled.Adjust) { showStep = true }
             ClickRow(stringResource(R.string.override_popup_side), stringResource(settings.popupSide.label()), Icons.Filled.SwapHoriz) { showSide = true }
         }
     }
-
-    if (showStyle) {
-        ChoiceDialog(
-            title = stringResource(R.string.override_popup_style),
-            options = PopupStyle.entries,
-            selected = settings.popupStyle,
-            labelOf = { stringResource(it.label()) },
-            onSelect = { viewModel.setPopupStyle(it); showStyle = false },
-            onDismiss = { showStyle = false },
-        )
-    }
+    
     if (showStep) {
         ChoiceDialog(
             title = stringResource(R.string.override_step),

@@ -77,7 +77,7 @@
     <string name="settings_processing_summary">Fine volume and EQ correction. Turn off to release the audio effects and stop running in the background.</string>
     <string name="eq_processing_off">Audio processing is off. Turn it on (switch in the top bar) to apply the profile.</string>
 
-    <string name="settings_dial_step">Dial step</string>
+    <string name="settings_dial_step">Knob step</string>
     <string name="settings_dial_step_summary">The knob clicks into place every step. Up and Down always move 1%.</string>
     <string name="dial_step_option">%1$d%%</string>
 
