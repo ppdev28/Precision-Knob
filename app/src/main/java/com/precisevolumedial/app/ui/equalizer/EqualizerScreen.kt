@@ -7,7 +7,10 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -31,12 +33,14 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.res.stringResource
@@ -99,11 +103,8 @@ fun EqualizerScreen(
             )
         }
 
-        // Selected headphone profile
-        Column(
-            modifier = Modifier.padding(horizontal = Spacing.m),
-            verticalArrangement = Arrangement.spacedBy(Spacing.s),
-        ) {
+        // Headphone correction card
+        EqCard {
             Text(stringResource(R.string.eq_headphones), style = MaterialTheme.typography.labelLarge, color = colors.primary)
             val selected = state.selected
             Text(selected?.name ?: stringResource(R.string.eq_no_profile), style = MaterialTheme.typography.titleMedium)
@@ -121,30 +122,11 @@ fun EqualizerScreen(
             if (importFailed) {
                 Text(stringResource(R.string.eq_import_failed), color = colors.error, style = MaterialTheme.typography.bodyMedium)
             }
-        }
+            EqPlot(curve, enabled = state.enabled)
 
-        val panel = RoundedCornerShape(Radius.large)
-        EqCurve(
-            gains = curve,
-            modifier = Modifier
-                .padding(horizontal = Spacing.m)
-                .fillMaxWidth()
-                .height(112.dp)
-                .alpha(if (state.enabled) 1f else 0.5f)
-                .background(colors.surface, panel)
-                .border(1.dp, colors.outline, panel)
-                .padding(Spacing.m),
-        )
-
-        // Saved profiles
-        if (state.profiles.isNotEmpty()) {
-            Column {
-                Text(
-                    stringResource(R.string.eq_my_profiles),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = colors.primary,
-                    modifier = Modifier.padding(horizontal = Spacing.m, vertical = Spacing.xs),
-                )
+            // Saved profiles
+            if (state.profiles.isNotEmpty()) {
+                Text(stringResource(R.string.eq_my_profiles), style = MaterialTheme.typography.labelLarge, color = colors.primary)
                 state.profiles.forEach { profile ->
                     ListItem(
                         headlineContent = { Text(profile.name) },
@@ -160,8 +142,6 @@ fun EqualizerScreen(
                 }
             }
         }
-
-        HorizontalDivider()
         ExternalEqSection(
             enabled = state.externalEnabled,
             gains = state.externalGains,
@@ -183,6 +163,45 @@ private fun presetLabel(key: String): String = stringResource(
     },
 )
 
+/** Rounded outlined card that groups one feature of the screen. */
+@Composable
+private fun EqCard(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    val colors = MaterialTheme.colorScheme
+    val shape = RoundedCornerShape(Radius.large)
+    Column(
+        modifier = modifier
+            .padding(horizontal = Spacing.m)
+            .fillMaxWidth()
+            .background(colors.surface, shape)
+            .border(1.dp, colors.outline, shape)
+            .padding(Spacing.m),
+        verticalArrangement = Arrangement.spacedBy(Spacing.s),
+        content = content,
+    )
+}
+
+@Composable
+private fun EqPlot(
+    gains: List<Float>,
+    enabled: Boolean,
+    modifier: Modifier = Modifier,
+    referenceGains: List<Float>? = null,
+) {
+    EqCurve(
+        gains = gains,
+        referenceGains = referenceGains,
+        modifier = modifier.fillMaxWidth().height(112.dp).alpha(if (enabled) 1f else 0.5f).padding(vertical = Spacing.xs),
+    )
+}
+
+@Composable
+private fun LegendDot(color: Color, label: String, modifier: Modifier = Modifier) {
+    Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(8.dp).background(color, CircleShape))
+        Text(label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.padding(start = Spacing.xs))
+    }
+}
+
 /** Anti-EQ: the user enters the tone settings of the equipment they are connected to; we apply the opposite. */
 @Composable
 private fun ExternalEqSection(
@@ -192,16 +211,23 @@ private fun ExternalEqSection(
     onGainsChange: (List<Int>) -> Unit,
 ) {
     val colors = MaterialTheme.colorScheme
-    Column(
-        modifier = Modifier.padding(horizontal = Spacing.m),
-        verticalArrangement = Arrangement.spacedBy(Spacing.s),
-    ) {
+    val correction = remember(gains) {
+        val filters = ExternalEq.inverseFilters(gains)
+        logSpaced(64).map { filters.responseDb(it) }
+    }
+    val deviceEffect = remember(correction) { correction.map { -it } }
+    EqCard {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(stringResource(R.string.anti_eq_title), style = MaterialTheme.typography.labelLarge, color = colors.primary)
                 Text(stringResource(R.string.anti_eq_summary), style = MaterialTheme.typography.bodyMedium, color = colors.onSurfaceVariant)
             }
             Switch(checked = enabled, onCheckedChange = onEnabledChange, colors = appSwitchColors(), modifier = Modifier.padding(start = Spacing.m))
+        }
+        EqPlot(correction, enabled = enabled, referenceGains = deviceEffect)
+        Row(horizontalArrangement = Arrangement.spacedBy(Spacing.m)) {
+            LegendDot(colors.onSurfaceVariant, stringResource(R.string.anti_eq_legend_device))
+            LegendDot(colors.primary, stringResource(R.string.anti_eq_legend_correction))
         }
         if (enabled) {
             Row(

@@ -113,5 +113,7 @@
     <string name="anti_eq_preset_vshape">V shape</string>
     <string name="anti_eq_band">%1$s</string>
     <string name="anti_eq_gain">%1$s dB</string>
+    <string name="anti_eq_legend_device">External device effect</string>
+    <string name="anti_eq_legend_correction">Correction applied</string>
     <string name="anti_eq_note">Set the sliders to what the other device is doing. It works on its own: it does not depend on the headphone correction above.</string>
 </resources>
