@@ -16,7 +16,7 @@ app/src/main/java/com/precisevolumedial/app/
   data/    SettingsRepository (DataStore)
   override/ VolumeKeyService (accessibility), OverrideRules, VolumePopup
   ui/
-    theme/       colors (sage), type, 8dp spacing
+    theme/       colors (steel blue), type, 8dp spacing
     components/  RotaryDial, StreamSelector, QuickControls, AppTopBar, EQ widgets
     volume/ equalizer/ settings/   screen + ViewModel each
     PreciseVolumeDialApp.kt   nav host + bottom bar

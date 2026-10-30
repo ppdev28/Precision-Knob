@@ -24,7 +24,7 @@ Objetivo de la app: **control fino del volumen (de 1% en 1%)** y **ecualización
 
 ## Volume Button Override (Settings → Controls) — beta
 Los botones físicos de volumen mueven el volumen multimedia con la resolución fina (1 % por defecto) **en cualquier app**, y se muestra un popup propio en lugar del del sistema.
-- Pantalla `OverrideScreen`: interruptor general, aviso si falta activar el servicio de accesibilidad (botón que abre los ajustes del sistema), interruptores por situación (**dispositivo desbloqueado**, **bloqueado**, **pantalla apagada**), estilo del popup (Sage accent / Dark / Light) y *Tweaks*: paso por pulsación (1, 2 o 5 %) y lado del popup (derecha / izquierda).
+- Pantalla `OverrideScreen`: interruptor general, aviso si falta activar el servicio de accesibilidad (botón que abre los ajustes del sistema), interruptores por situación (**dispositivo desbloqueado**, **bloqueado**, **pantalla apagada**), estilo del popup (Steel accent / Dark / Light) y *Tweaks*: paso por pulsación (1, 2 o 5 %) y lado del popup (derecha / izquierda).
 - Requiere activar **Precise Volume Dial** en Ajustes → Accesibilidad. El servicio solo pide filtrar teclas; no lee contenido de pantalla.
 - Durante llamadas o con el teléfono sonando (`AudioManager.mode != MODE_NORMAL`) no interviene: las teclas siguen controlando ese volumen.
 - El **interruptor de la pantalla Volume** (procesamiento de audio) también apaga el override: con él apagado las teclas vuelven al sistema, y `OverrideScreen` lo avisa. El ajuste propio del override se conserva.
