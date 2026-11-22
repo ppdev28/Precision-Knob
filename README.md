@@ -35,7 +35,7 @@ Android gives you about 15 volume steps. **Precise Knob** gives you 100: a hand-
 
 ### 🎧 EQ Correction
 - **Headphones card**: search ~8,800 models from AutoEq, download the profile in one tap, or import any `ParametricEQ.txt`. The response curve is drawn from the real filters.
-- **Anti-EQ card**: tell the app what your radio, speaker or car stereo is doing to the sound (5 bands, ±12 dB, with presets) and it applies the opposite. The chart shows the device's effect (dashed) against the correction applied.
+- **Anti-EQ card**: tell the app what your radio, speaker or car stereo is doing to the sound (1–10 bands, editable frequencies from 20 Hz to 20 kHz, ±12 dB, with presets) and it applies the opposite. Tap a band frequency to edit it; changing the band count redistributes frequencies and adapts gains. Presets follow your chosen frequencies, and settings are saved automatically. The chart shows the device's effect (dashed) against the correction applied.
 - Independent switches: use headphone correction, anti-EQ, or both together.
 
 ### 🔘 Volume Button Override *(beta)*

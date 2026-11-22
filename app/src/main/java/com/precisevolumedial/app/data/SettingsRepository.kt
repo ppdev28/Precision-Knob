@@ -39,8 +39,9 @@ data class AppSettings(
     val popupSide: PopupSide = PopupSide.Right,
     /** Anti-EQ: cancel the tone settings of the radio/speaker the phone is connected to. */
     val externalEqEnabled: Boolean = false,
-    /** Gains (dB) of the external device on the five anti-EQ bands. */
+    /** Gains (dB) and centre frequencies of the external device's anti-EQ bands. */
     val externalEqGains: List<Int> = ExternalEq.Flat,
+    val externalEqFrequencies: List<Float> = ExternalEq.BandsHz,
 )
 
 /** Allowed dial detent sizes (all divide 100). */
@@ -69,10 +70,12 @@ class SettingsRepository(private val context: Context) {
         val popupSide = stringPreferencesKey("popup_side")
         val externalEqEnabled = booleanPreferencesKey("external_eq_enabled")
         val externalEqGains = stringPreferencesKey("external_eq_gains")
+        val externalEqFrequencies = stringPreferencesKey("external_eq_frequencies")
     }
 
     val settings: Flow<AppSettings> = context.dataStore.data.map { prefs ->
         val defaults = AppSettings()
+        val frequencies = ExternalEq.parseFrequencies(prefs[Keys.externalEqFrequencies])
         AppSettings(
             showPercent = prefs[Keys.showPercent] ?: defaults.showPercent,
             haptics = prefs[Keys.haptics] ?: defaults.haptics,
@@ -89,7 +92,8 @@ class SettingsRepository(private val context: Context) {
             popupStyle = prefs.enumOrNull<PopupStyle>(Keys.popupStyle) ?: defaults.popupStyle,
             popupSide = prefs.enumOrNull<PopupSide>(Keys.popupSide) ?: defaults.popupSide,
             externalEqEnabled = prefs[Keys.externalEqEnabled] ?: defaults.externalEqEnabled,
-            externalEqGains = ExternalEq.parse(prefs[Keys.externalEqGains]),
+            externalEqGains = ExternalEq.parse(prefs[Keys.externalEqGains], frequencies.size),
+            externalEqFrequencies = frequencies,
         )
     }
 
@@ -107,7 +111,10 @@ class SettingsRepository(private val context: Context) {
     suspend fun setPopupStyle(value: PopupStyle) = edit { it[Keys.popupStyle] = value.name }
     suspend fun setPopupSide(value: PopupSide) = edit { it[Keys.popupSide] = value.name }
     suspend fun setExternalEqEnabled(value: Boolean) = edit { it[Keys.externalEqEnabled] = value }
-    suspend fun setExternalEqGains(value: List<Int>) = edit { it[Keys.externalEqGains] = ExternalEq.serialize(value) }
+    suspend fun setExternalEqBands(gains: List<Int>, frequencies: List<Float>) = edit {
+        it[Keys.externalEqGains] = ExternalEq.serialize(gains)
+        it[Keys.externalEqFrequencies] = ExternalEq.serializeFrequencies(frequencies)
+    }
     suspend fun setEqEnabled(value: Boolean) = edit { it[Keys.eqEnabled] = value }
     suspend fun setSelectedProfile(id: String?) = edit { if (id == null) it.remove(Keys.selectedProfile) else it[Keys.selectedProfile] = id }
 

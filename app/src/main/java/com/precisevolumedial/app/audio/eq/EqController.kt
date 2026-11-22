@@ -23,6 +23,7 @@ data class EqState(
     val processingOn: Boolean = true,
     val externalEnabled: Boolean = false,
     val externalGains: List<Int> = ExternalEq.Flat,
+    val externalFrequencies: List<Float> = ExternalEq.BandsHz,
 ) {
     val selected: EqProfile? get() = profiles.firstOrNull { it.id == selectedId }
     /** Headphone correction only (what the curve on the screen shows); the anti-EQ is independent of it. */
@@ -32,7 +33,7 @@ data class EqState(
     /** What the audio effect receives: each of the two corrections counts only while its own switch is on. */
     val fxEnabled: Boolean get() = enabled || externalEnabled
     val fxFilters: List<ParametricFilter>
-        get() = (if (enabled) filters else emptyList()) + if (externalEnabled) ExternalEq.inverseFilters(externalGains) else emptyList()
+        get() = (if (enabled) filters else emptyList()) + if (externalEnabled) ExternalEq.inverseFilters(externalGains, externalFrequencies) else emptyList()
     val fxPreampDb: Float
         get() = (if (enabled) preampDb else 0f) + if (externalEnabled) ExternalEq.preampDb(externalGains) else 0f
 }
@@ -63,6 +64,7 @@ class EqController(
                     processingOn = saved.processingEnabled,
                     externalEnabled = saved.externalEqEnabled,
                     externalGains = saved.externalEqGains,
+                    externalFrequencies = saved.externalEqFrequencies,
                 )
             }
             apply()
@@ -88,9 +90,34 @@ class EqController(
     }
 
     fun setExternalGains(gains: List<Int>) {
-        _state.update { it.copy(externalGains = gains) }
+        if (gains.size != _state.value.externalFrequencies.size) return
+        _state.update { it.copy(externalGains = gains.map { gain -> gain.coerceIn(ExternalEq.MinDb, ExternalEq.MaxDb) }) }
+        saveExternalBands()
+    }
+
+    fun setExternalBandCount(count: Int) {
+        if (count !in ExternalEq.MinBands..ExternalEq.MaxBands || count == _state.value.externalFrequencies.size) return
+        val frequencies = ExternalEq.defaultFrequencies(count)
+        _state.update {
+            it.copy(
+                externalFrequencies = frequencies,
+                externalGains = ExternalEq.resampleGains(it.externalFrequencies, it.externalGains, frequencies),
+            )
+        }
+        saveExternalBands()
+    }
+
+    fun setExternalFrequency(band: Int, hz: Float) {
+        if (!hz.isFinite() || hz !in ExternalEq.MinHz.toFloat()..ExternalEq.MaxHz.toFloat()) return
+        if (band !in _state.value.externalFrequencies.indices) return
+        _state.update { it.copy(externalFrequencies = it.externalFrequencies.toMutableList().also { bands -> bands[band] = hz }) }
+        saveExternalBands()
+    }
+
+    private fun saveExternalBands() {
         apply()
-        scope.launch { settings.setExternalEqGains(gains) }
+        val state = _state.value
+        scope.launch { settings.setExternalEqBands(state.externalGains, state.externalFrequencies) }
     }
 
     fun select(id: String?) {

@@ -20,9 +20,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Icon
@@ -30,19 +35,28 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -145,8 +159,11 @@ fun EqualizerScreen(
         ExternalEqSection(
             enabled = state.externalEnabled,
             gains = state.externalGains,
+            frequencies = state.externalFrequencies,
             onEnabledChange = viewModel::setExternalEnabled,
             onGainsChange = viewModel::setExternalGains,
+            onBandCountChange = viewModel::setExternalBandCount,
+            onFrequencyChange = viewModel::setExternalFrequency,
         )
     }
 }
@@ -207,12 +224,17 @@ private fun LegendDot(color: Color, label: String, modifier: Modifier = Modifier
 private fun ExternalEqSection(
     enabled: Boolean,
     gains: List<Int>,
+    frequencies: List<Float>,
     onEnabledChange: (Boolean) -> Unit,
     onGainsChange: (List<Int>) -> Unit,
+    onBandCountChange: (Int) -> Unit,
+    onFrequencyChange: (Int, Float) -> Unit,
 ) {
     val colors = MaterialTheme.colorScheme
-    val correction = remember(gains) {
-        val filters = ExternalEq.inverseFilters(gains)
+    var countMenuOpen by remember { mutableStateOf(false) }
+    var editingBand by rememberSaveable { mutableStateOf<Int?>(null) }
+    val correction = remember(gains, frequencies) {
+        val filters = ExternalEq.inverseFilters(gains, frequencies)
         logSpaced(64).map { filters.responseDb(it) }
     }
     val deviceEffect = remember(correction) { correction.map { -it } }
@@ -230,11 +252,30 @@ private fun ExternalEqSection(
             LegendDot(colors.primary, stringResource(R.string.anti_eq_legend_correction))
         }
         if (enabled) {
+            Box {
+                OutlinedButton(onClick = { countMenuOpen = true }) {
+                    Text(stringResource(R.string.anti_eq_band_count, frequencies.size))
+                }
+                DropdownMenu(expanded = countMenuOpen, onDismissRequest = { countMenuOpen = false }) {
+                    (ExternalEq.MinBands..ExternalEq.MaxBands).forEach { count ->
+                        DropdownMenuItem(
+                            text = { Text(count.toString()) },
+                            onClick = {
+                                countMenuOpen = false
+                                editingBand = null
+                                onBandCountChange(count)
+                            },
+                        )
+                    }
+                }
+            }
+            Text(stringResource(R.string.anti_eq_layout_hint), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
             Row(
                 modifier = Modifier.horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(Spacing.s),
             ) {
-                ExternalEq.Presets.forEach { (key, preset) ->
+                ExternalEq.Presets.forEach { (key, _) ->
+                    val preset = ExternalEq.presetGains(key, frequencies)
                     FilterChip(
                         selected = gains == preset,
                         onClick = { onGainsChange(preset) },
@@ -242,14 +283,21 @@ private fun ExternalEqSection(
                     )
                 }
             }
-            ExternalEq.BandsHz.forEachIndexed { band, hz ->
+            frequencies.forEachIndexed { band, hz ->
+                val frequencyDescription = stringResource(R.string.anti_eq_edit_frequency, band + 1, bandLabel(hz))
+                val gainDescription = stringResource(R.string.anti_eq_band_gain, band + 1, bandLabel(hz))
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(bandLabel(hz), style = MaterialTheme.typography.bodyMedium, modifier = Modifier.width(64.dp))
+                    TextButton(
+                        onClick = { editingBand = band },
+                        modifier = Modifier.width(96.dp).semantics { contentDescription = frequencyDescription },
+                    ) {
+                        Text(bandLabel(hz), style = MaterialTheme.typography.bodyMedium)
+                    }
                     Slider(
                         value = gains[band].toFloat(),
                         onValueChange = { v -> onGainsChange(gains.toMutableList().also { it[band] = v.roundToInt() }) },
                         valueRange = ExternalEq.MinDb.toFloat()..ExternalEq.MaxDb.toFloat(),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).semantics { contentDescription = gainDescription },
                     )
                     Text(
                         stringResource(R.string.anti_eq_gain, if (gains[band] > 0) "+${gains[band]}" else "${gains[band]}"),
@@ -263,4 +311,43 @@ private fun ExternalEqSection(
             Text(stringResource(R.string.anti_eq_note), style = MaterialTheme.typography.bodySmall, color = colors.onSurfaceVariant)
         }
     }
+    editingBand?.takeIf { enabled && it in frequencies.indices }?.let { band ->
+        FrequencyDialog(
+            band = band,
+            frequency = frequencies[band],
+            onDismiss = { editingBand = null },
+            onConfirm = { hz ->
+                onFrequencyChange(band, hz)
+                editingBand = null
+            },
+        )
+    }
+}
+
+@Composable
+private fun FrequencyDialog(band: Int, frequency: Float, onDismiss: () -> Unit, onConfirm: (Float) -> Unit) {
+    var text by rememberSaveable(band, frequency) { mutableStateOf(frequency.toInt().toString()) }
+    val hz = text.toIntOrNull()?.takeIf { it in ExternalEq.MinHz..ExternalEq.MaxHz }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.anti_eq_frequency_title, band + 1)) },
+        text = {
+            OutlinedTextField(
+                value = text,
+                onValueChange = { text = it },
+                label = { Text(stringResource(R.string.anti_eq_frequency_hz)) },
+                supportingText = { Text(stringResource(R.string.anti_eq_frequency_range, ExternalEq.MinHz, ExternalEq.MaxHz)) },
+                isError = hz == null,
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { hz?.let { onConfirm(it.toFloat()) } }),
+            )
+        },
+        confirmButton = {
+            TextButton(enabled = hz != null, onClick = { hz?.let { onConfirm(it.toFloat()) } }) {
+                Text(stringResource(R.string.anti_eq_apply))
+            }
+        },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(android.R.string.cancel)) } },
+    )
 }

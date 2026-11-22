@@ -25,6 +25,8 @@ class EqualizerViewModel(container: AppContainer) : ViewModel() {
     fun select(id: String?) = eq.select(id)
     fun setExternalEnabled(enabled: Boolean) = eq.setExternalEnabled(enabled)
     fun setExternalGains(gains: List<Int>) = eq.setExternalGains(gains)
+    fun setExternalBandCount(count: Int) = eq.setExternalBandCount(count)
+    fun setExternalFrequency(band: Int, hz: Float) = eq.setExternalFrequency(band, hz)
     fun delete(id: String) = eq.delete(id)
     fun dismissImportError() { _importFailed.value = false }
 

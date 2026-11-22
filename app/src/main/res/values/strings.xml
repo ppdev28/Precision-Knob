@@ -113,7 +113,14 @@
     <string name="anti_eq_preset_bass">Bass boost</string>
     <string name="anti_eq_preset_treble">Treble boost</string>
     <string name="anti_eq_preset_vshape">V shape</string>
-    <string name="anti_eq_band">%1$s</string>
+    <string name="anti_eq_band_count">Bands: %1$d</string>
+    <string name="anti_eq_layout_hint">Tap a frequency to edit it. Changing the band count redistributes frequencies and adapts the gains.</string>
+    <string name="anti_eq_edit_frequency">Edit band %1$d frequency, %2$s</string>
+    <string name="anti_eq_band_gain">Band %1$d gain at %2$s</string>
+    <string name="anti_eq_frequency_title">Band %1$d frequency</string>
+    <string name="anti_eq_frequency_hz">Frequency (Hz)</string>
+    <string name="anti_eq_frequency_range">Enter a whole number from %1$d to %2$d Hz.</string>
+    <string name="anti_eq_apply">Apply</string>
     <string name="anti_eq_gain">%1$s dB</string>
     <string name="anti_eq_legend_device">External device effect</string>
     <string name="anti_eq_legend_correction">Correction applied</string>
