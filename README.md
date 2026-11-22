@@ -4,7 +4,7 @@
 
 **A rotary volume dial with 1 % steps, and AutoEq headphone correction, for Android.**
 
-[![Release](https://img.shields.io/badge/release-v1.0.0-4682B4?style=for-the-badge)](../../releases/latest)
+[![Release](https://img.shields.io/badge/release-v1.1.0-4682B4?style=for-the-badge)](../../releases/latest)
 [![Android](https://img.shields.io/badge/Android-9%2B-4682B4?style=for-the-badge&logo=android&logoColor=white)](#install)
 [![Kotlin](https://img.shields.io/badge/Kotlin-Jetpack%20Compose-4682B4?style=for-the-badge&logo=kotlin&logoColor=white)](#build-from-source)
 [![Material 3](https://img.shields.io/badge/Material-3-4682B4?style=for-the-badge&logo=materialdesign&logoColor=white)](docs/design-system.md)
@@ -46,7 +46,7 @@ Steel blue Material 3 theme, dark by default with light and system modes.
 
 ## 📲 Install
 
-1. Download `PreciseKnob-1.0.0.apk` from the [latest release](../../releases/latest).
+1. Download `PreciseKnob-1.1.0.apk` from the [latest release](../../releases/latest).
 2. Open it on your phone and allow installing from your browser or file manager if asked.
 3. On first launch, allow notifications (needed for the background audio service).
 

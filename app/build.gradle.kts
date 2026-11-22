@@ -14,8 +14,8 @@ android {
         applicationId = "com.precisevolumedial.app"
         minSdk = 28
         targetSdk = 35
-        versionCode = 2
-        versionName = "1.0.0"
+        versionCode = 3
+        versionName = "1.1.0"
     }
 
     // Release signing comes from keystore.properties (git-ignored); without it the release APK is left unsigned.

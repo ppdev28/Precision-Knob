@@ -6,7 +6,7 @@ Estado: ✅ hecho · 🚧 en curso · ⬜ pendiente
 
 Objetivos: **(1)** volumen de 1% en 1% sobre los pasos nativos y **(2)** perfiles de EQ de AutoEq para auriculares planos.
 
-**Versión actual: 1.0.0** (primera estable, APK de release firmada). Notas en [releases/v1.0.0.md](releases/v1.0.0.md).
+**Versión actual: 1.1.0** (Anti-EQ con bandas y frecuencias configurables, APK de release firmada). Notas en [releases/v1.1.0.md](releases/v1.1.0.md).
 
 ## Fase 0 – Esqueleto ✅
 - ✅ Proyecto Gradle con wrapper, compila en debug
